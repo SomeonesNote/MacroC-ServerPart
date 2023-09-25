@@ -50,10 +50,10 @@ export class AuthService {
   }
 
   async singUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { username } = authCredentialsDto;
-    const user = await this.userRepository.findOneBy({ username });
+    const { email } = authCredentialsDto;
+    const user = await this.userRepository.findOneBy({ email });
     if (user) {
-      throw new UnauthorizedException('Username already exists');
+      throw new UnauthorizedException('Email already exists');
     }
     return this.userRepository.createUser(authCredentialsDto);
   }
