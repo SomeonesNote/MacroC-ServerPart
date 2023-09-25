@@ -25,9 +25,6 @@ export class AuthCredentialsDto {
   @MaxLength(20)
   username: string;
 
-  @IsOptional()
-  avatar: Buffer;
-
   @IsString()
   @IsOptional()
   avatarUrl: string;
@@ -46,4 +43,15 @@ export class SignInCredentialsDto {
     message: 'password only accepts english and numbers',
   })
   password: string;
+}
+
+export class UpdatableUserInfos {
+  @IsString()
+  @MinLength(4)
+  @MaxLength(20)
+  username: string;
+
+  @IsString()
+  @IsOptional()
+  avatarUrl: string;
 }

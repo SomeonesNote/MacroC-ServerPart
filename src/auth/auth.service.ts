@@ -8,6 +8,7 @@ import { UserRepository } from './user.repository';
 import {
   AuthCredentialsDto,
   SignInCredentialsDto,
+  UpdatableUserInfos,
 } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -96,5 +97,28 @@ export class AuthService {
       throw new NotFoundException(`User with ID "${id}" not found`); // Throw an error if the user is not found
     }
     return found;
+  }
+
+  async updateUser(
+    id: number,
+    updatableUserInfos: UpdatableUserInfos,
+  ): Promise<User> {
+    const user = await this.getUserById(id);
+
+    user.username = updatableUserInfos.username;
+    user.avatarUrl = updatableUserInfos.avatarUrl;
+
+    await this.userRepository.save(user);
+    return user;
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    const result = await this.userRepository.delete({
+      id,
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
+    }
   }
 }

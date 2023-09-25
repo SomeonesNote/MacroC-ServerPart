@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseFilePipe,
+  ParseIntPipe,
+  Patch,
   Post,
   UploadedFiles,
   UseGuards,
@@ -14,6 +17,7 @@ import { AuthService } from './auth.service';
 import {
   AuthCredentialsDto,
   SignInCredentialsDto,
+  UpdatableUserInfos,
 } from './dto/auth-credential.dto';
 import { User } from './user.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -69,6 +73,40 @@ export class AuthController {
   @Get('/:id')
   getUserById(@Param('id') id: number): Promise<User> {
     return this.authService.getUserById(id);
+  }
+
+  @Patch('/:id')
+  @UseInterceptors(FilesInterceptor('images'))
+  async updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [],
+      }),
+    )
+    images,
+    @Body(new ValidationPipe()) updatableUserInfos: UpdatableUserInfos,
+  ): Promise<User> {
+    let imgUrl: string = '';
+
+    await Promise.all(
+      images.map(async (image: Express.Multer.File) => {
+        const key = await this.authService.upload(image);
+        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com//profile-images/${key}`;
+      }),
+    );
+    updatableUserInfos.avatarUrl = imgUrl;
+
+    const updatedUser = await this.authService.updateUser(
+      id,
+      updatableUserInfos,
+    );
+    return updatedUser;
+  }
+
+  @Delete('/:id')
+  deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.authService.deleteUser(id);
   }
 
   @Post('/test')
