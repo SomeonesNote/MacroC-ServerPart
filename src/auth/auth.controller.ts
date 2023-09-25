@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   ParseFilePipe,
   Post,
   UploadedFiles,
@@ -17,39 +18,34 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/upload')
+  @Post('/signup-with-image')
   @UseInterceptors(FilesInterceptor('images'))
-  async uploadImage(
+  async signUpWithImage(
     @UploadedFiles(
       new ParseFilePipe({
-        validators: [
-          // new MaxFieldSizeValidator({ maxSize: 1000 }),
-          // new FileExtensionValidator({ extensions: ['jpg', 'png'] }),
-        ],
+        validators: [],
       }),
     )
     images,
-  ) {
-    console.log(`images : ${images}`);
-    const imgUrl: string[] = [];
+    @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto,
+  ): Promise<void> {
+    let imgUrl: string = '';
+
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
         const key = await this.authService.upload(image);
-        imgUrl.push(`${key}`);
+        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com//profile-images/${key}`;
       }),
     );
-    return {
-      statusCode: 201,
-      message: 'Image uploaded successfully',
-      data: imgUrl,
-    };
+    authCredentialsDto.avatarUrl = imgUrl;
+    await this.authService.signUp(authCredentialsDto);
   }
 
   @Post('/signup')
   singUp(
-    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+    @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto,
   ): Promise<void> {
-    return this.authService.singUp(authCredentialsDto);
+    return this.authService.signUp(authCredentialsDto);
   }
 
   @Post('/signin')
@@ -62,5 +58,10 @@ export class AuthController {
   @Get('/users')
   async getAllUsers(): Promise<User[]> {
     return this.authService.getAllUsers();
+  }
+
+  @Get('/:id')
+  getUserById(@Param('id') id: number): Promise<User> {
+    return this.authService.getUserById(id);
   }
 }

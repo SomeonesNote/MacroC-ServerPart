@@ -28,5 +28,7 @@ export class AuthCredentialsDto {
   @IsOptional()
   avatar: Buffer;
 
-  url: string;
+  @IsString()
+  @IsOptional()
+  avatarUrl: string;
 }
