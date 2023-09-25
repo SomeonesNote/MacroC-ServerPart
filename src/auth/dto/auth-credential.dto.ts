@@ -32,3 +32,18 @@ export class AuthCredentialsDto {
   @IsOptional()
   avatarUrl: string;
 }
+
+export class SignInCredentialsDto {
+  @IsString()
+  @MinLength(4)
+  @MaxLength(20)
+  email: string;
+
+  @IsString()
+  @MinLength(8)
+  @MaxLength(20)
+  @Matches(/^[a-zA-Z0-9]*$/, {
+    message: 'password only accepts english and numbers',
+  })
+  password: string;
+}

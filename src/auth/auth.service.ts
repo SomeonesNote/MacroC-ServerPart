@@ -5,7 +5,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import {
+  AuthCredentialsDto,
+  SignInCredentialsDto,
+} from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
@@ -63,9 +66,9 @@ export class AuthService {
   }
 
   async signIn(
-    authCredentialsDto: AuthCredentialsDto,
+    signInCredentialsDto: SignInCredentialsDto,
   ): Promise<{ accessToken: string }> {
-    const { email, password } = authCredentialsDto;
+    const { email, password } = signInCredentialsDto;
     const user = await this.userRepository.findOneBy({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {

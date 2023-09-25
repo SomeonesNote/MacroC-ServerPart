@@ -6,13 +6,19 @@ import {
   ParseFilePipe,
   Post,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import {
+  AuthCredentialsDto,
+  SignInCredentialsDto,
+} from './dto/auth-credential.dto';
 import { User } from './user.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from './get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -50,9 +56,9 @@ export class AuthController {
 
   @Post('/signin')
   signIn(
-    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+    @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
   ): Promise<{ accessToken: string }> {
-    return this.authService.signIn(authCredentialsDto);
+    return this.authService.signIn(signInCredentialsDto);
   }
 
   @Get('/users')
@@ -63,5 +69,11 @@ export class AuthController {
   @Get('/:id')
   getUserById(@Param('id') id: number): Promise<User> {
     return this.authService.getUserById(id);
+  }
+
+  @Post('/test')
+  @UseGuards(AuthGuard())
+  test(@GetUser() user: User) {
+    console.log(user);
   }
 }
