@@ -6,8 +6,14 @@ export class User extends BaseEntity {
   id: number;
 
   @Column()
+  email: string;
+
+  @Column()
   username: string;
 
   @Column()
   password: string;
+
+  @Column({ comment: 's3 업로드된 localtion url' })
+  avatarUrl: string;
 }
