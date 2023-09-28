@@ -109,9 +109,10 @@ export class AuthController {
     return this.authService.deleteUser(id);
   }
 
-  @Post('/test')
+  @Post('/profile')
   @UseGuards(AuthGuard())
-  test(@GetUser() user: User) {
+  getUserData(@GetUser() user: User) {
     console.log(user);
+    return user;
   }
 }
