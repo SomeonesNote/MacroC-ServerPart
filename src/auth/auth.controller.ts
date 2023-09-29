@@ -44,7 +44,7 @@ export class AuthController {
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
         const key = await this.authService.upload(image);
-        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com//profile-images/${key}`;
+        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/profile-images/${key}`;
       }),
     );
     authCredentialsDto.avatarUrl = imgUrl;
@@ -63,6 +63,13 @@ export class AuthController {
     @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
   ): Promise<{ accessToken: string }> {
     return this.authService.signIn(signInCredentialsDto);
+  }
+
+  @Post('/profile')
+  @UseGuards(AuthGuard())
+  getUserData(@GetUser() user: User) {
+    console.log(user);
+    return user;
   }
 
   @Get('/users')
@@ -107,12 +114,5 @@ export class AuthController {
   @Delete('/:id')
   deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.authService.deleteUser(id);
-  }
-
-  @Post('/profile')
-  @UseGuards(AuthGuard())
-  getUserData(@GetUser() user: User) {
-    console.log(user);
-    return user;
   }
 }
