@@ -8,17 +8,21 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.stragegy';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
+import * as config from 'config';
+import { User } from './user.entity';
 
+const jwtConfig = config.get('jwt');
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'topSecret51',
+      secret: process.env.JWT_SECRET || jwtConfig.secret,
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: jwtConfig.expiresIn,
       },
     }),
-    TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([User]),
+    // TypeOrmModule.forFeature([UserRepository]),
     ThrottlerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         ttl: configService.getOrThrow('UPLOAD_RATE_TTL'),

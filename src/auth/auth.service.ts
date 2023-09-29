@@ -75,8 +75,6 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { email };
       const accessToken = await this.jwtService.sign(payload);
-      // return { accessToken };
-      // Set the token in the response header
       const response = {
         accessToken,
       };
