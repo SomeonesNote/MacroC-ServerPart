@@ -68,7 +68,6 @@ export class AuthController {
   @Post('/profile')
   @UseGuards(AuthGuard())
   getUserData(@GetUser() user: User) {
-    console.log(user);
     return user;
   }
 
