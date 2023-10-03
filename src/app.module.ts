@@ -11,8 +11,8 @@ import { ArtistModule } from './artist/artist.module';
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
     AuthModule,
-    ConfigModule.forRoot({ isGlobal: true }),
     ArtistModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -70,7 +70,7 @@ export class AuthService {
     signInCredentialsDto: SignInCredentialsDto,
   ): Promise<{ accessToken: string }> {
     const { email, password } = signInCredentialsDto;
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOne({ where: { email } });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { email };
