@@ -23,11 +23,11 @@ export class ArtistService {
     return this.artistRepository.find();
   }
 
-  async getArtistByName(stageName: string): Promise<Artist> {
-    const found = await this.artistRepository.findOneBy({ stageName });
+  async getArtistById(id: number): Promise<Artist> {
+    const found = await this.artistRepository.findOneBy({ id });
 
     if (!found) {
-      throw new NotFoundException(`Artist with ID "${stageName}" not found`);
+      throw new NotFoundException(`Artist with ID "${id}" not found`);
     }
     return found;
   }
