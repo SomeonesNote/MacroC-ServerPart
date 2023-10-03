@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   Logger,
+  Param,
   Post,
   UseGuards,
   UsePipes,
@@ -27,10 +29,20 @@ export class ArtistController {
     @GetUser() user: User, // 현재 로그인한 사용자 정보
   ): Promise<Artist> {
     this.logger.verbose(
-      `User ${user.username} creating a new board. Payload: ${JSON.stringify(
+      `User ${user.username} creating a new Artist. Payload: ${JSON.stringify(
         createArtistDto,
       )}`,
     );
     return this.artistService.createArtist(user, createArtistDto);
+  }
+
+  @Get('/All')
+  async getAllUsers(): Promise<Artist[]> {
+    return this.artistService.getAllArtiists();
+  }
+
+  @Get('/:id')
+  getUserById(@Param('id') stageName: string): Promise<Artist> {
+    return this.artistService.getArtistByName(stageName);
   }
 }

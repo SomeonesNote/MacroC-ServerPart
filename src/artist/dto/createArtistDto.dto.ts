@@ -1,6 +1,8 @@
 import { IsString, MinLength } from 'class-validator';
 
 export class CreateArtistDto {
+  artistId: number;
+
   @IsString()
   stageName: string;
 

@@ -3,10 +3,14 @@ import { DataSource, Repository } from 'typeorm';
 import { Artist } from './artist.entity';
 import { CreateArtistDto } from './dto/createArtistDto.dto';
 import { User } from 'src/auth/user.entity';
+import { UserRepository } from 'src/auth/user.repository';
 
 @Injectable()
 export class ArtistRepository extends Repository<Artist> {
-  constructor(dataSource: DataSource) {
+  constructor(
+    dataSource: DataSource,
+    private userRepository: UserRepository,
+  ) {
     super(Artist, dataSource.createEntityManager());
   }
 
@@ -22,8 +26,10 @@ export class ArtistRepository extends Repository<Artist> {
       user,
     });
 
+    user.artist = artist;
+
     await this.save(artist);
-    console.log(`repository: ${user}`);
+    await this.userRepository.save(user);
     return artist;
   }
 }
