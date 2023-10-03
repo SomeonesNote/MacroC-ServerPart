@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Unique(['email'])
+@Unique(['stageName'])
 export class Artist extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,14 +23,11 @@ export class Artist extends BaseEntity {
   @Column({ nullable: true })
   biography: string;
 
-  @OneToOne(() => User)
-  @JoinColumn()
+  @OneToOne(() => User, (user) => user.artist, { eager: false })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @ManyToMany(() => User, (user) => user.following)
   @JoinTable()
   followers: User[];
-
-  //   @Column({ comment: 's3 업로드된 localtion url' })
-  //   avatarUrl: string;
 }

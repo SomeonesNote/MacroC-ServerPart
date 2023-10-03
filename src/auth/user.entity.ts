@@ -29,8 +29,11 @@ export class User extends BaseEntity {
   @Column({ comment: 's3 업로드된 localtion url' })
   avatarUrl: string;
 
-  @OneToOne(() => Artist, { nullable: true })
-  @JoinColumn()
+  @OneToOne(() => Artist, (artist) => artist.user, {
+    eager: true,
+    nullable: true,
+  })
+  @JoinColumn({ name: 'artistId' })
   artist: Artist;
 
   @ManyToMany(() => Artist, (artist) => artist.followers)
