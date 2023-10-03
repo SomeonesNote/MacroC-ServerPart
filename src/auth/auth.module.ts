@@ -22,7 +22,6 @@ const jwtConfig = config.get('jwt');
       },
     }),
     TypeOrmModule.forFeature([User]),
-    // TypeOrmModule.forFeature([UserRepository]),
     ThrottlerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         ttl: configService.getOrThrow('UPLOAD_RATE_TTL'),
