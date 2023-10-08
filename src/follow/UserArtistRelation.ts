@@ -1,17 +1,15 @@
 import { Artist } from 'src/artist/artist.entity';
-import { User } from 'src/auth/user.entity';
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from '../auth/user.entity';
 
 @Entity()
-export class Follow {
+export class UserArtistRelation {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.following)
-  @JoinColumn({ name: 'followerId' })
   follower: User;
 
   @ManyToOne(() => Artist, (artist) => artist.followers)
-  @JoinColumn({ name: 'artistId' })
   artist: Artist;
 }

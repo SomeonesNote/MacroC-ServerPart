@@ -7,10 +7,21 @@ import { ArtistController } from './artist.controller';
 import { ArtistService } from './artist.service';
 import { ArtistRepository } from './artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
+import { UserFollowingController } from 'src/follow/user-following.controller';
+import { UserFollowingService } from 'src/follow/user-following.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Artist]), AuthModule],
-  controllers: [ArtistCreateController, ArtistController],
-  providers: [ArtistService, ArtistRepository, UserRepository],
+  controllers: [
+    ArtistCreateController,
+    ArtistController,
+    UserFollowingController,
+  ],
+  providers: [
+    ArtistService,
+    ArtistRepository,
+    UserRepository,
+    UserFollowingService,
+  ],
 })
 export class ArtistModule {}

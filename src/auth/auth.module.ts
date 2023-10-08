@@ -10,6 +10,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 import * as config from 'config';
 import { User } from './user.entity';
+import { UserFollowingController } from '../follow/user-following.controller';
+import { ArtistRepository } from 'src/artist/artist.repository';
+import { Artist } from 'src/artist/artist.entity';
+import { UserFollowingService } from 'src/follow/user-following.service';
 
 const jwtConfig = config.get('jwt');
 @Module({
@@ -21,7 +25,6 @@ const jwtConfig = config.get('jwt');
         expiresIn: jwtConfig.expiresIn,
       },
     }),
-    TypeOrmModule.forFeature([User]),
     ThrottlerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         ttl: configService.getOrThrow('UPLOAD_RATE_TTL'),
@@ -29,9 +32,17 @@ const jwtConfig = config.get('jwt');
       }),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Artist]),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, UserRepository, JwtStrategy],
+  controllers: [AuthController, UserFollowingController],
+  providers: [
+    JwtStrategy,
+    AuthService,
+    UserFollowingService,
+    ArtistRepository,
+    UserRepository,
+  ],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

@@ -37,6 +37,16 @@ export class User extends BaseEntity {
   artist: Artist;
 
   @ManyToMany(() => Artist, (artist) => artist.followers)
-  @JoinTable()
+  @JoinTable({
+    name: 'user_following_artist', // 중간 테이블의 이름 설정
+    joinColumn: {
+      name: 'userId', // 아티스트의 ID와 연결
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'artistId', // 유저의 ID와 연결
+      referencedColumnName: 'id',
+    },
+  })
   following: Artist[];
 }
