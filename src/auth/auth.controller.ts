@@ -98,7 +98,7 @@ export class AuthController {
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
         const key = await this.authService.upload(image);
-        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com//profile-images/${key}`;
+        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/profile-images/${key}`;
       }),
     );
     updatableUserInfos.avatarUrl = imgUrl;

@@ -7,7 +7,6 @@ import { User } from './user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
-
 @Injectable()
 export class UserRepository extends Repository<User> {
   constructor(dataSource: DataSource) {
