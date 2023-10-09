@@ -1,6 +1,15 @@
-import { BaseEntity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Artist } from '../../artist/artist.entity';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
+import { Artist } from 'src/artist/artist.entity';
 
+@Entity()
+@Unique(['memberName'])
 export class Member extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,4 +1,5 @@
 import { User } from 'src/auth/user.entity';
+import { Member } from 'src/member/member.entity';
 import {
   BaseEntity,
   Column,
@@ -11,7 +12,6 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Member } from '../member/members/member.entity';
 
 @Entity()
 @Unique(['stageName'])
