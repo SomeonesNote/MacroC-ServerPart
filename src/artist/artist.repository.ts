@@ -35,7 +35,7 @@ export class ArtistRepository extends Repository<Artist> {
     try {
       await this.save(artist);
       await this.userRepository.save(user);
-      console.log('artist saved to the database:', artist); // 데이터베이스에 저장된 사용자 정보 출력
+      console.log('artist saved to the database:', artist);
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException(`Artist : '${stageName}' already exists`);

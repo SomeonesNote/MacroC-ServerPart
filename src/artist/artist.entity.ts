@@ -6,10 +6,12 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { Member } from '../member/members/member.entity';
 
 @Entity()
 @Unique(['stageName'])
@@ -23,21 +25,27 @@ export class Artist extends BaseEntity {
   @Column({ nullable: true })
   biography: string;
 
+  @Column({ nullable: true })
+  artistImage: string;
+
   @OneToOne(() => User, (user) => user.artist, { eager: false })
   @JoinColumn({ name: 'userId' })
   user: User;
 
   @ManyToMany(() => User, (user) => user.following)
   @JoinTable({
-    name: 'artist_followers_user', // 중간 테이블의 이름 설정
+    name: 'artist_followers_user',
     joinColumn: {
-      name: 'artistId', // 아티스트의 ID와 연결
+      name: 'artistId',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'userId', // 유저의 ID와 연결
+      name: 'userId',
       referencedColumnName: 'id',
     },
   })
   followers: User[];
+
+  @OneToMany(() => Member, (member) => member.artist, { eager: true })
+  members: Member[];
 }
