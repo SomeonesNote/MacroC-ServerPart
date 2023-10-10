@@ -2,11 +2,12 @@ import {
   BaseEntity,
   Column,
   Entity,
-  //   ManyToOne,
+  // JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-// import { Artist } from 'src/artist/artist.entity';
+import { Artist } from 'src/artist/artist.entity';
 
 @Entity()
 @Unique(['id'])
@@ -14,21 +15,23 @@ export class Busking extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  longitude: string;
+  @Column({ type: 'double precision' })
+  longitude: number;
 
-  @Column()
-  latitude: string;
+  @Column({ type: 'double precision' })
+  latitude: number;
 
   @Column()
   BuskingInfo: string;
 
   @Column()
-  BuskingStartTIme: Date;
+  BuskingStartTime: string;
+  // BuskingStartTime: Date;
 
   @Column()
-  BuskingEndTIme: Date;
+  BuskingEndTime: string;
+  // BuskingEndTime: Date;
 
-  //   @ManyToOne(() => Artist, (artist) => artist.busking, { eager: false })
-  //   artist: Artist;
+  @ManyToOne(() => Artist, (artist) => artist.buskings, { eager: false })
+  artist: Artist;
 }

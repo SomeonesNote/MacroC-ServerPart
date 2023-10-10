@@ -1,4 +1,5 @@
 import { User } from 'src/auth/user.entity';
+import { Busking } from 'src/busking/busking.entity';
 import { Member } from 'src/member/member.entity';
 import {
   BaseEntity,
@@ -23,9 +24,9 @@ export class Artist extends BaseEntity {
   stageName: string;
 
   @Column()
-  genre: string;
+  genres: string;
 
-  @Column({ nullable: true })
+  @Column()
   artistInfo: string;
 
   @Column({ nullable: true })
@@ -51,4 +52,7 @@ export class Artist extends BaseEntity {
 
   @OneToMany(() => Member, (member) => member.artist, { eager: true })
   members: Member[];
+
+  @OneToMany(() => Busking, (busking) => busking.artist, { eager: true })
+  buskings: Busking[];
 }

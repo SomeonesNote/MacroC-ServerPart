@@ -7,6 +7,9 @@ export class CreateArtistDto {
   stageName: string;
 
   @IsString()
+  genres: string;
+
+  @IsString()
   @MinLength(4)
   artistInfo: string;
 
