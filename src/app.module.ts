@@ -7,6 +7,7 @@ import { typeORMConfig } from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { ArtistModule } from './artist/artist.module';
 import { MemberModule } from './member/member.module';
+import { BuskingModule } from './busking/busking.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { MemberModule } from './member/member.module';
     ArtistModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MemberModule,
+    BuskingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

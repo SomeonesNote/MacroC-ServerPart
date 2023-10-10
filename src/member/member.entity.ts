@@ -18,7 +18,7 @@ export class Member extends BaseEntity {
   memberName: string;
 
   @Column()
-  memberDescription: string;
+  memberInfo: string;
 
   @Column({ nullable: true })
   memberImage: string;

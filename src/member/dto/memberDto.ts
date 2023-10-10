@@ -6,8 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-class ArtistDto {
-  @IsString()
+export class ArtistDto {
   @IsNotEmpty()
   id: number;
 }
@@ -18,7 +17,7 @@ export class MemberDto {
 
   @IsString()
   @MinLength(4)
-  memberDescription: string;
+  memberInfo: string;
 
   @ValidateNested()
   @Type(() => ArtistDto)

@@ -23,14 +23,14 @@ export class ArtistCreateController {
   @Post('/create')
   @UsePipes(ValidationPipe)
   async createArtist(
-    @Body() createArtistDto: CreateArtistDto, // 클라이언트에서 받은 아티스트 정보 DTO
-    @GetUser() user: User, // 현재 로그인한 사용자 정보
+    @Body() createArtistDto: CreateArtistDto,
+    @GetUser() user: User,
   ): Promise<Artist> {
     this.logger.verbose(
       `User ${user.username} creating a new Artist. Payload: ${JSON.stringify(
         createArtistDto,
       )}`,
     );
-    return this.artistService.createArtist(user, createArtistDto);
+    return await this.artistService.createArtist(user, createArtistDto);
   }
 }
