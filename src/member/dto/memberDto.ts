@@ -18,7 +18,7 @@ export class MemberDto {
 
   @IsString()
   @MinLength(4)
-  memberDescription: string;
+  memberInfo: string;
 
   @ValidateNested()
   @Type(() => ArtistDto)

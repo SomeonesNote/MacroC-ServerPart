@@ -22,8 +22,11 @@ export class Artist extends BaseEntity {
   @Column()
   stageName: string;
 
+  @Column()
+  genre: string;
+
   @Column({ nullable: true })
-  biography: string;
+  artistInfo: string;
 
   @Column({ nullable: true })
   artistImage: string;

@@ -8,7 +8,7 @@ export class CreateArtistDto {
 
   @IsString()
   @MinLength(4)
-  biography: string;
+  artistInfo: string;
 
   // @IsString()
   // @IsOptional()

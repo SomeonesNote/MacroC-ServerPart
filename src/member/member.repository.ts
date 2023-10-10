@@ -16,11 +16,11 @@ export class MemberRepository extends Repository<Member> {
 
   // async createMember(memberDto: MemberDto, artist: Artist): Promise<Member> {
   async createMember(memberDto: MemberDto): Promise<Member> {
-    const { memberName, memberDescription, artist } = memberDto;
+    const { memberName, memberInfo, artist } = memberDto;
 
     const member = this.create({
       memberName,
-      memberDescription,
+      memberInfo,
       artist,
     });
 
