@@ -7,7 +7,7 @@ export class ArtistController {
   constructor(private artistService: ArtistService) {}
 
   @Get('/All')
-  async getAllArtists(): Promise<Artist[]> {
+  getAllArtists(): Promise<Artist[]> {
     return this.artistService.getAllArtiists();
   }
 
