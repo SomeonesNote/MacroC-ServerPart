@@ -1,7 +1,8 @@
-import { IsString, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 import { AuthCredentialsDto } from 'src/auth/dto/auth-credential.dto';
 import { BuskingDto } from 'src/busking/dto/buskingDto';
 import { MemberDto } from 'src/member/dto/memberDto';
+
 
 export class CreateArtistDto {
   artistId: number;
@@ -16,13 +17,14 @@ export class CreateArtistDto {
   @MinLength(4)
   artistInfo: string;
 
-  // @IsString()
-  // @IsOptional()
-  // avatarUrl: string;
+  @IsString()
+  @IsOptional()
+  artistImage: string;
 
   user: AuthCredentialsDto;
 
   members: MemberDto[];
 
   buskings: BuskingDto[];
+
 }

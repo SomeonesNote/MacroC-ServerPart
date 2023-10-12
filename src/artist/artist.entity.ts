@@ -29,7 +29,7 @@ export class Artist extends BaseEntity {
   @Column()
   artistInfo: string;
 
-  @Column({ nullable: true })
+  @Column()
   artistImage: string;
 
   @OneToOne(() => User, (user) => user.artist, { eager: false })

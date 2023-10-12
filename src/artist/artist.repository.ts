@@ -22,12 +22,13 @@ export class ArtistRepository extends Repository<Artist> {
     createArtistDto: CreateArtistDto,
     user: User,
   ): Promise<Artist> {
-    const { stageName, artistInfo, genres } = createArtistDto;
+    const { stageName, artistInfo, genres, artistImage } = createArtistDto;
 
     const artist = this.create({
       stageName,
       artistInfo,
       genres,
+      artistImage,
       user,
     });
 
@@ -36,7 +37,6 @@ export class ArtistRepository extends Repository<Artist> {
     try {
       await this.save(artist);
       await this.userRepository.save(user);
-      console.log('artist saved to the database:', artist);
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException(`Artist : '${stageName}' already exists`);
