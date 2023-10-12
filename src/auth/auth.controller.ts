@@ -23,10 +23,15 @@ import { User } from './user.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user.decorator';
+import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadPath } from 'src/upload/uploadPath';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly uploadImageServce: UploadImageServce,
+  ) {}
 
   @Post('/signup-with-image')
   @UseInterceptors(FilesInterceptor('images'))
@@ -40,11 +45,16 @@ export class AuthController {
     @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto,
   ): Promise<void> {
     let imgUrl: string = '';
+    const username = authCredentialsDto.username;
 
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
-        const key = await this.authService.upload(image);
-        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/profile-images/${key}`;
+        const key = await this.uploadImageServce.upload(
+          UploadPath.profileImages,
+          username,
+          image,
+        );
+        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${UploadPath.profileImages}/${username}/${key}`;
       }),
     );
     authCredentialsDto.avatarUrl = imgUrl;
@@ -94,11 +104,16 @@ export class AuthController {
     @Body(new ValidationPipe()) updatableUserInfos: UpdatableUserInfos,
   ): Promise<User> {
     let imgUrl: string = '';
+    const username = updatableUserInfos.username;
 
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
-        const key = await this.authService.upload(image);
-        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/profile-images/${key}`;
+        const key = await this.uploadImageServce.upload(
+          UploadPath.profileImages,
+          username,
+          image,
+        );
+        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${UploadPath.profileImages}/${username}/${key}`;
       }),
     );
     updatableUserInfos.avatarUrl = imgUrl;
