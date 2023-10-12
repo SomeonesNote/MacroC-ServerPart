@@ -26,10 +26,12 @@ export class UploadImageServce {
     uploadPath: UploadPath,
     username: string,
     image?: Express.Multer.File,
+    artistId?: number,
   ) {
     const key = `${Date.now() + image.originalname}`;
+    const bucketName = this.getBucketName(uploadPath, username, artistId);
     const params = {
-      Bucket: `${process.env.AWS_S3_BUCKET_NAME}/${uploadPath}/${username}`,
+      Bucket: bucketName,
       ACL: 'public-read',
       Key: key,
       Body: image.buffer,
@@ -40,5 +42,22 @@ export class UploadImageServce {
         resolve(key);
       });
     });
+  }
+
+  private getBucketName(
+    uploadPath: UploadPath,
+    username: string,
+    artistId?: number,
+  ) {
+    switch (uploadPath) {
+      case UploadPath.profileImages:
+        return `${process.env.AWS_S3_BUCKET_NAME}/${uploadPath}/${username}`;
+      case UploadPath.artistImages:
+        return `${process.env.AWS_S3_BUCKET_NAME}/${uploadPath}/${username}`;
+      case UploadPath.membersImages:
+        return `${process.env.AWS_S3_BUCKET_NAME}/${uploadPath}/${artistId}/${username}`;
+      default:
+        throw new Error('Invalid uploadPath');
+    }
   }
 }
