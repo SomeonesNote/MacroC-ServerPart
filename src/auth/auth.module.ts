@@ -12,7 +12,6 @@ import * as config from 'config';
 import { User } from './user.entity';
 import { UserFollowingController } from '../follow/user-following.controller';
 import { ArtistRepository } from 'src/artist/artist.repository';
-import { Artist } from 'src/artist/artist.entity';
 import { UserFollowingService } from 'src/follow/user-following.service';
 import { UploadImageServce } from 'src/upload/uploadImage.service';
 
@@ -34,7 +33,6 @@ const jwtConfig = config.get('jwt');
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([User]),
-    TypeOrmModule.forFeature([Artist]),
   ],
   controllers: [AuthController, UserFollowingController],
   providers: [
