@@ -25,9 +25,9 @@ export class BuskingService {
     return await this.buskingRepository.createBusking(buskingDto, artist);
   }
 
-  async getAllBusking(artist: Artist): Promise<Busking[]> {
+  async getAllBusking(artistId: number): Promise<Busking[]> {
     const query = this.buskingRepository.createQueryBuilder('busking');
-    query.where('busking.artistId = :artistId', { artistId: artist.id });
+    query.where('busking.artistId = :artistId', { artistId });
     const buskings = await query.getMany();
     return buskings;
   }
