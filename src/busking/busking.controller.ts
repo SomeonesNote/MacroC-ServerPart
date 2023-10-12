@@ -15,8 +15,8 @@ import {
 import { BuskingService } from './busking.service';
 import { Busking } from './busking.entity';
 import { BuskingDto } from './dto/buskingDto';
-import { GetArtist } from 'src/artist/get-artist.decorator';
 import { Artist } from 'src/artist/artist.entity';
+import { GetArtist } from 'src/artist/get-artist.decorator';
 
 @Controller('busking')
 export class BuskingController {
@@ -37,17 +37,15 @@ export class BuskingController {
     );
     const artist = new Artist();
     artist.id = artistId;
-
     return this.buskingService.createBusking(buskingDto, artistId);
   }
 
-  @Get('/getAll')
-  getAllBusking(@GetArtist() artist: Artist): Promise<Busking[]> {
+  @Get('/getAll/:artistId')
+  getAllBusking(@Param('artistId') artistId: number): Promise<Busking[]> {
     this.logger.verbose(
-      `Busking Performance is being fetched by Artist : ${artist.stageName}`,
+      `Busking Performance is being fetched by Artist : ${artistId}`,
     );
-    console.log(artist);
-    return this.buskingService.getAllBusking(artist);
+    return this.buskingService.getAllBusking(artistId);
   }
 
   @Get('/:id')
