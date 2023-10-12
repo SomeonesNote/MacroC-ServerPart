@@ -20,7 +20,7 @@ export class Member extends BaseEntity {
   @Column()
   memberInfo: string;
 
-  @Column({ nullable: true })
+  @Column()
   memberImage: string;
 
   @ManyToOne(() => Artist, (artist) => artist.members, { eager: false })
