@@ -28,7 +28,6 @@ export class BuskingController {
   createBusking(
     @Body() buskingDto: BuskingDto,
     @Param('artistId') artistId: number,
-    // @GetArtist() artist: Artist,
   ): Promise<Busking> {
     this.logger.verbose(
       `Busking Performance is being created by Artist : ${artistId}. Data: ${JSON.stringify(
