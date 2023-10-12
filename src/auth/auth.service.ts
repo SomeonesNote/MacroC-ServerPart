@@ -13,14 +13,12 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
-    private uploadImageServce: UploadImageServce,
     private jwtService: JwtService,
   ) {}
 

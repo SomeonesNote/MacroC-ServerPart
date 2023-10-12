@@ -1,4 +1,4 @@
-import { IsString, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateArtistDto {
   artistId: number;
@@ -13,7 +13,7 @@ export class CreateArtistDto {
   @MinLength(4)
   artistInfo: string;
 
-  // @IsString()
-  // @IsOptional()
-  // avatarUrl: string;
+  @IsString()
+  @IsOptional()
+  artistImage: string;
 }

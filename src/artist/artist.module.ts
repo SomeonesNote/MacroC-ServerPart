@@ -9,6 +9,7 @@ import { ArtistRepository } from './artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { UserFollowingController } from 'src/follow/user-following.controller';
 import { UserFollowingService } from 'src/follow/user-following.service';
+import { UploadImageServce } from 'src/upload/uploadImage.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Artist]), AuthModule],
@@ -22,6 +23,7 @@ import { UserFollowingService } from 'src/follow/user-following.service';
     ArtistRepository,
     UserRepository,
     UserFollowingService,
+    UploadImageServce,
   ],
 })
 export class ArtistModule {}
