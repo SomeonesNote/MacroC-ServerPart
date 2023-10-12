@@ -7,11 +7,11 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  //   UseGuards,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 import { BuskingService } from './busking.service';
 import { Busking } from './busking.entity';
 import { BuskingDto } from './dto/buskingDto';
@@ -19,6 +19,7 @@ import { Artist } from 'src/artist/artist.entity';
 import { GetArtist } from 'src/artist/get-artist.decorator';
 
 @Controller('busking')
+@UseGuards(AuthGuard())
 export class BuskingController {
   private logger = new Logger('BuskingController');
   constructor(private buskingService: BuskingService) {}
@@ -28,7 +29,6 @@ export class BuskingController {
   createBusking(
     @Body() buskingDto: BuskingDto,
     @Param('artistId') artistId: number,
-    // @GetArtist() artist: Artist,
   ): Promise<Busking> {
     this.logger.verbose(
       `Busking Performance is being created by Artist : ${artistId}. Data: ${JSON.stringify(

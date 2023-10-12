@@ -1,15 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsString,
-  MinLength,
-  ValidateNested,
-} from 'class-validator';
-
-export class ArtistDto {
-  @IsNotEmpty()
-  id: number;
-}
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class MemberDto {
   @IsString()
@@ -19,7 +8,7 @@ export class MemberDto {
   @MinLength(4)
   memberInfo: string;
 
-  @ValidateNested()
-  @Type(() => ArtistDto)
-  artist: ArtistDto;
+  @IsString()
+  @IsOptional()
+  memberImage: string;
 }
