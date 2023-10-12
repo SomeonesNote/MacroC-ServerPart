@@ -9,6 +9,7 @@ import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [MemberController],
   providers: [

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Artist } from './artist.entity';
+import { AuthModule } from 'src/auth/auth.module';
 import { ArtistCreateController } from './artist.create.controller';
 import { ArtistController } from './artist.controller';
 import { ArtistService } from './artist.service';
@@ -22,6 +23,7 @@ import { ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [
     ArtistCreateController,
