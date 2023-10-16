@@ -77,7 +77,7 @@ export class AuthController {
 
   @Post('/profile')
   @UseGuards(AuthGuard())
-  getUserData(@GetUser() user: User) {
+  findUserData(@GetUser() user: User) {
     return user;
   }
 
