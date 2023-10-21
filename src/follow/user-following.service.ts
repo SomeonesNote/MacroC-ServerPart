@@ -51,9 +51,6 @@ export class UserFollowingService {
       throw new NotFoundException('User not found');
     }
 
-    // const isFollowing = user.following.some((artist) => artist.id === artistId);
-    // const isFollowers = artist.followers.some((user) => user.id === userId);
-
     user.following = user.following.filter(
       (artist) => artist.id !== Number(artistId),
     );
