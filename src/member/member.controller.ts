@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseFilePipe,
+  ParseIntPipe,
   Post,
   UploadedFiles,
   UseGuards,
@@ -66,5 +68,10 @@ export class MemberController {
     @Param('artistId') artistId: number,
   ): Promise<Member[]> {
     return await this.memberService.getArtistMembers(artistId);
+  }
+
+  @Delete('/:id')
+  deleteMember(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.memberService.deleteMemeber(id);
   }
 }

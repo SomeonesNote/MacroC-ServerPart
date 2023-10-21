@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberRepository } from './member.repository';
 import { MemberDto } from './dto/memberDto';
@@ -25,5 +25,17 @@ export class MemberService {
     query.where('member.artistId = :artistId', { artistId });
     const members = await query.getMany();
     return members;
+  }
+
+  async deleteMemeber(id: number): Promise<void> {
+    const artist = await this.artistRepository.findOneBy({
+      members: { id },
+    });
+    console.log(artist);
+    const result = await this.memberRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Memeber with ID "${id}" not found`);
+    }
   }
 }
