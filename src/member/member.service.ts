@@ -18,7 +18,6 @@ export class MemberService {
       where: { id: artistId },
     });
 
-    console.log(artist);
     if (artist === null) {
       throw new NotFoundException(`Artist "${artist}" not found`);
     }
