@@ -1,8 +1,10 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { Artist } from './artist.entity';
+// import { GetUser } from 'src/auth/get-user.decorator';
+// import { User } from 'src/auth/user.entity';
 
-@Controller('artist-GET')
+@Controller('artist')
 export class ArtistController {
   constructor(private artistService: ArtistService) {}
 
@@ -14,5 +16,13 @@ export class ArtistController {
   @Get('/:id')
   getArtistById(@Param('id') id: number): Promise<Artist> {
     return this.artistService.getArtistById(id);
+  }
+
+  @Delete('/:id')
+  deleteArtsist(
+    @Param('id', ParseIntPipe) id: number,
+    // @GetUser() user: User,
+  ): Promise<void> {
+    return this.artistService.deleteArtist(id);
   }
 }
