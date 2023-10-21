@@ -17,6 +17,12 @@ export class MemberService {
     const artist = await this.artistRepository.findOne({
       where: { id: artistId },
     });
+
+    console.log(artist);
+    if (artist === null) {
+      throw new NotFoundException(`Artist "${artist}" not found`);
+    }
+
     return await this.memberRepository.createMember(memberDto, artist);
   }
 
@@ -28,10 +34,6 @@ export class MemberService {
   }
 
   async deleteMemeber(id: number): Promise<void> {
-    const artist = await this.artistRepository.findOneBy({
-      members: { id },
-    });
-    console.log(artist);
     const result = await this.memberRepository.delete(id);
 
     if (result.affected === 0) {
