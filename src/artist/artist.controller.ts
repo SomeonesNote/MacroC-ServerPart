@@ -19,10 +19,7 @@ export class ArtistController {
   }
 
   @Delete('/:id')
-  deleteArtsist(
-    @Param('id', ParseIntPipe) id: number,
-    // @GetUser() user: User,
-  ): Promise<void> {
+  deleteArtsist(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.artistService.deleteArtist(id);
   }
 }
