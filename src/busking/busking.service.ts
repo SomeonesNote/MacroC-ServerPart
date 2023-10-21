@@ -3,7 +3,6 @@ import { BuskingRepository } from './busking.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BuskingDto } from './dto/buskingDto';
 import { Busking } from './busking.entity';
-import { Artist } from 'src/artist/artist.entity';
 import { ArtistRepository } from 'src/artist/artist.repository';
 
 @Injectable()
@@ -43,7 +42,10 @@ export class BuskingService {
     return found;
   }
 
-  async deleteBuskingById(id: number, artist: Artist): Promise<void> {
+  async deleteBuskingById(id: number, artistId: number): Promise<void> {
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
+    });
     const result = await this.buskingRepository.delete({
       id,
       artist: { id: artist.id },

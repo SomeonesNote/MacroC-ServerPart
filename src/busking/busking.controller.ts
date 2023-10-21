@@ -16,7 +16,6 @@ import { BuskingService } from './busking.service';
 import { Busking } from './busking.entity';
 import { BuskingDto } from './dto/buskingDto';
 import { Artist } from 'src/artist/artist.entity';
-import { GetArtist } from 'src/artist/get-artist.decorator';
 
 @Controller('busking')
 @UseGuards(AuthGuard())
@@ -56,8 +55,8 @@ export class BuskingController {
   @Delete('/:id')
   deleteBusking(
     @Param('id', ParseIntPipe) id: number,
-    @GetArtist() artist: Artist,
+    @Param('artistId') artistId: number,
   ): Promise<void> {
-    return this.buskingService.deleteBuskingById(id, artist);
+    return this.buskingService.deleteBuskingById(id, artistId);
   }
 }
