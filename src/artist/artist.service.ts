@@ -4,12 +4,15 @@ import { ArtistRepository } from './artist.repository';
 import { User } from 'src/auth/user.entity';
 import { CreateArtistDto } from './dto/createArtistDto.dto';
 import { Artist } from './artist.entity';
+import { UserRepository } from 'src/auth/user.repository';
 
 @Injectable()
 export class ArtistService {
   constructor(
     @InjectRepository(ArtistRepository)
     private artistRepository: ArtistRepository,
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
   ) {}
 
   async createArtist(
@@ -30,5 +33,20 @@ export class ArtistService {
       throw new NotFoundException(`Artist with ID "${id}" not found`);
     }
     return found;
+  }
+
+  async deleteArtist(id: number): Promise<void> {
+    const user = await this.userRepository.findOneBy({
+      artist: { id },
+    });
+
+    user.artist = null;
+    await user.save();
+
+    const result = await this.artistRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Artist with ID "${id}" not found`);
+    }
   }
 }

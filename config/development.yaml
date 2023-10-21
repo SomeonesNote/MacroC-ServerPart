@@ -1,5 +1,6 @@
 db:
-  host: 'host.docker.internal'
+  host: 'localhost'
+  # host: 'host.docker.internal'
   username: 'postgres'
   password: 'postgres'
   synchronize: true
