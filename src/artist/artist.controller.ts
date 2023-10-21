@@ -1,8 +1,6 @@
 import { Controller, Delete, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { Artist } from './artist.entity';
-// import { GetUser } from 'src/auth/get-user.decorator';
-// import { User } from 'src/auth/user.entity';
 
 @Controller('artist')
 export class ArtistController {
