@@ -1,5 +1,6 @@
 .git
 Dockerfile
 node_modules
+*.pem
 dist
 npm-debug.log*
