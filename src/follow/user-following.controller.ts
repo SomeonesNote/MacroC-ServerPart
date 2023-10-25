@@ -36,6 +36,6 @@ export class UserFollowingController {
 
   @Get(':id/following')
   async getFollowersOfUser(@Param('id') userId: number): Promise<Artist[]> {
-    return this.userFollowingService.getFollowersOfUser(userId);
+    return this.userFollowingService.getFollowingOfUser(userId);
   }
 }

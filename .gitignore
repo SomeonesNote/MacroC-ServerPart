@@ -37,3 +37,4 @@ lerna-debug.log*
 
 # aws key pem
 nestjs-deplooy.pem
+beanstalk-node.pem
