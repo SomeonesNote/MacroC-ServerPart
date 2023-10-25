@@ -1,3 +1,4 @@
+import { IsOptional } from 'class-validator';
 import { User } from 'src/auth/user.entity';
 import { Busking } from 'src/busking/busking.entity';
 import { Member } from 'src/member/member.entity';
@@ -28,6 +29,18 @@ export class Artist extends BaseEntity {
 
   @Column()
   artistInfo: string;
+
+  @Column()
+  @IsOptional()
+  instagramURL: string;
+
+  @Column()
+  @IsOptional()
+  youtubeURL: string;
+
+  @Column()
+  @IsOptional()
+  soundcloudURL: string;
 
   @Column()
   artistImage: string;

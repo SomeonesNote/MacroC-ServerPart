@@ -18,6 +18,18 @@ export class CreateArtistDto {
 
   @IsString()
   @IsOptional()
+  instagramURL: string;
+
+  @IsString()
+  @IsOptional()
+  youtubeURL: string;
+
+  @IsString()
+  @IsOptional()
+  soundcloudURL: string;
+
+  @IsString()
+  @IsOptional()
   artistImage: string;
 
   user: AuthCredentialsDto;
