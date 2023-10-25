@@ -92,8 +92,8 @@ export class MemberController {
       }),
     )
     images,
-    @Body() memberDto: MemberDto,
     @Param('artistId') artistId: number,
+    @Body() memberDto: MemberDto,
   ): Promise<Member> {
     let imgUrl = '';
     const memberName = memberDto.memberName;
