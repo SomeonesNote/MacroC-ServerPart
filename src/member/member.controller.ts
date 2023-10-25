@@ -6,6 +6,7 @@ import {
   Param,
   ParseFilePipe,
   ParseIntPipe,
+  Patch,
   Post,
   UploadedFiles,
   UseGuards,
@@ -63,15 +64,60 @@ export class MemberController {
     return await this.memberService.createMember(artistId, memberDto);
   }
 
+  @Get('/:id')
+  getArtistMemberById(@Param('id') id: number): Promise<Member> {
+    return this.memberService.getArtistMemberById(id);
+  }
+
   @Get('/getAll/:artistId')
   async getArtistMembers(
     @Param('artistId') artistId: number,
   ): Promise<Member[]> {
-    return await this.memberService.getArtistMembers(artistId);
+    return await this.memberService.getAllArtistMembers(artistId);
   }
 
   @Delete('/:id')
   deleteMember(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.memberService.deleteMemeber(id);
+  }
+
+  @Patch('/update/:id')
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FilesInterceptor('images'))
+  async updateMember(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [],
+      }),
+    )
+    images,
+    @Body() memberDto: MemberDto,
+    @Param('artistId') artistId: number,
+  ): Promise<Member> {
+    let imgUrl = '';
+    const memberName = memberDto.memberName;
+    const artist = new Artist();
+    artist.id = artistId;
+
+    await Promise.all(
+      images.map(async (image: Express.Multer.File) => {
+        const key = await this.uploadImageServce.upload(
+          UploadPath.membersImages,
+          memberName,
+          image,
+          artistId,
+        );
+        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${UploadPath.membersImages}/${artistId}/${memberName}/${key}`;
+      }),
+    );
+    memberDto.memberImage = imgUrl;
+
+    const updatedMember = await this.memberService.updateMember(
+      id,
+      artistId,
+      memberDto,
+    );
+    return updatedMember;
   }
 }
