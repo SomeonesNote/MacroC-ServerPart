@@ -6,6 +6,7 @@ import {
   Logger,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
   UsePipes,
@@ -58,5 +59,20 @@ export class BuskingController {
     @Param('artistId') artistId: number,
   ): Promise<void> {
     return this.buskingService.deleteBuskingById(id, artistId);
+  }
+
+  @Patch('update/:id')
+  async updateBusking(
+    @Param('id') id: number,
+    @Param('artistId') artistId: number,
+    @Body() buskingDto: BuskingDto,
+  ): Promise<Busking> {
+    const updatedBusking = await this.buskingService.updateBusking(
+      id,
+      artistId,
+      buskingDto,
+    );
+
+    return updatedBusking;
   }
 }

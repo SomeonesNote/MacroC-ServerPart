@@ -57,4 +57,25 @@ export class BuskingService {
       );
     }
   }
+
+  async updateBusking(
+    id: number,
+    artistId: number,
+    buskingDto: BuskingDto,
+  ): Promise<Busking> {
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
+    });
+    const busking = await this.getBuskingById(id);
+
+    busking.BuskingStartTime = buskingDto.BuskingStartTime;
+    busking.BuskingEndTime = buskingDto.BuskingEndTime;
+    busking.BuskingInfo = buskingDto.BuskingInfo;
+    busking.latitude = buskingDto.latitude;
+    busking.longitude = buskingDto.longitude;
+    busking.artist = artist;
+
+    await this.buskingRepository.save(busking);
+    return busking;
+  }
 }

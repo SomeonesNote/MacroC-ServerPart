@@ -75,7 +75,7 @@ export class UserFollowingService {
     return artist.followers;
   }
 
-  async getFollowersOfUser(userId: number): Promise<Artist[]> {
+  async getFollowingOfUser(userId: number): Promise<Artist[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['following'],

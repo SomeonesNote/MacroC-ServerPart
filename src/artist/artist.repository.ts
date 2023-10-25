@@ -22,12 +22,23 @@ export class ArtistRepository extends Repository<Artist> {
     createArtistDto: CreateArtistDto,
     user: User,
   ): Promise<Artist> {
-    const { stageName, artistInfo, genres, artistImage } = createArtistDto;
+    const {
+      stageName,
+      artistInfo,
+      genres,
+      instagramURL,
+      youtubeURL,
+      soundcloudURL,
+      artistImage,
+    } = createArtistDto;
 
     const artist = this.create({
       stageName,
       artistInfo,
       genres,
+      instagramURL,
+      youtubeURL,
+      soundcloudURL,
       artistImage,
       user,
     });

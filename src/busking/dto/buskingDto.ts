@@ -11,10 +11,10 @@ export class BuskingDto {
   BuskingInfo: string;
 
   @IsNotEmpty()
-  BuskingStartTime: string;
+  BuskingStartTime: Date;
 
   @IsNotEmpty()
-  BuskingEndTime: string;
+  BuskingEndTime: Date;
 }
 
 // 37.5797, 126.9771
