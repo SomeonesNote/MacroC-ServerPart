@@ -49,4 +49,24 @@ export class ArtistService {
       throw new NotFoundException(`Artist with ID "${id}" not found`);
     }
   }
+
+  async updateUser(
+    id: number,
+    user: User,
+    createArtistDto: CreateArtistDto,
+  ): Promise<Artist> {
+    const artist = await this.getArtistById(id);
+
+    artist.stageName = createArtistDto.stageName;
+    artist.artistImage = createArtistDto.artistImage;
+    artist.artistInfo = createArtistDto.artistInfo;
+    artist.genres = createArtistDto.genres;
+    artist.instagramURL = createArtistDto.instagramURL;
+    artist.youtubeURL = createArtistDto.youtubeURL;
+    artist.soundcloudURL = createArtistDto.soundcloudURL;
+    artist.user = user;
+
+    await this.artistRepository.save(artist);
+    return artist;
+  }
 }
