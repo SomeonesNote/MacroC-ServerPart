@@ -3,7 +3,6 @@ import { BuskingRepository } from './busking.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BuskingDto } from './dto/buskingDto';
 import { Busking } from './busking.entity';
-import { Artist } from 'src/artist/artist.entity';
 import { ArtistRepository } from 'src/artist/artist.repository';
 
 @Injectable()
@@ -43,7 +42,10 @@ export class BuskingService {
     return found;
   }
 
-  async deleteBuskingById(id: number, artist: Artist): Promise<void> {
+  async deleteBuskingById(id: number, artistId: number): Promise<void> {
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
+    });
     const result = await this.buskingRepository.delete({
       id,
       artist: { id: artist.id },
@@ -54,5 +56,26 @@ export class BuskingService {
         `Busking Performance with ID "${id}" not found`,
       );
     }
+  }
+
+  async updateBusking(
+    id: number,
+    artistId: number,
+    buskingDto: BuskingDto,
+  ): Promise<Busking> {
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
+    });
+    const busking = await this.getBuskingById(id);
+
+    busking.BuskingStartTime = buskingDto.BuskingStartTime;
+    busking.BuskingEndTime = buskingDto.BuskingEndTime;
+    busking.BuskingInfo = buskingDto.BuskingInfo;
+    busking.latitude = buskingDto.latitude;
+    busking.longitude = buskingDto.longitude;
+    busking.artist = artist;
+
+    await this.buskingRepository.save(busking);
+    return busking;
   }
 }

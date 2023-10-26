@@ -24,12 +24,12 @@ export class Busking extends BaseEntity {
   BuskingInfo: string;
 
   @Column()
-  BuskingStartTime: string;
-  // BuskingStartTime: Date;
+  // BuskingStartTime: string;
+  BuskingStartTime: Date;
 
   @Column()
-  BuskingEndTime: string;
-  // BuskingEndTime: Date;
+  // BuskingEndTime: string;
+  BuskingEndTime: Date;
 
   @ManyToOne(() => Artist, (artist) => artist.buskings, { eager: false })
   artist: Artist;

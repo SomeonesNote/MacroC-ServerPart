@@ -12,9 +12,9 @@ import { BuskingModule } from './busking/busking.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
+    ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     ArtistModule,
-    ConfigModule.forRoot({ isGlobal: true }),
     MemberModule,
     BuskingModule,
   ],

@@ -2,6 +2,7 @@
 /dist
 /node_modules
 .env
+docker-compose.yaml
 # Logs
 logs
 *.log
@@ -33,3 +34,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# aws key pem
+nestjs-deplooy.pem
+beanstalk-node.pem
