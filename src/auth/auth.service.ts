@@ -20,17 +20,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async isSignUp(authCredentialsDto: AuthCredentialsDto): Promise<boolean> {
-    const { uid } = authCredentialsDto;
-
-    const user = await this.userRepository.findOneBy({ uid });
-    if (user) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username } = authCredentialsDto;
 
@@ -41,24 +30,37 @@ export class AuthService {
     return this.userRepository.createUser(authCredentialsDto);
   }
 
-  async signIn() {}
-  // async signIn(
-  //   signInCredentialsDto: SignInCredentialsDto,
-  // ): Promise<{ accessToken: string }> {
-  //   const { email, password } = signInCredentialsDto;
-  //   const user = await this.userRepository.findOne({ where: { email } });
+  async signIn(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ accessToken: string }> {
+    const { uid } = authCredentialsDto;
 
-  //   if (user && (await bcrypt.compare(password, user.password))) {
-  //     const payload = { email };
-  //     const accessToken = await this.jwtService.sign(payload);
-  //     const response = {
-  //       accessToken,
-  //     };
-  //     return response;
-  //   } else {
-  //     throw new UnauthorizedException('Please check your login credentials');
-  //   }
-  // }
+    const user = await this.userRepository.findOneBy({ uid });
+    if (user) {
+      const payload = { uid };
+      const accessToken = await this.jwtService.sign(payload);
+      const response = {
+        accessToken,
+      };
+      console.log(response);
+
+      return response;
+    } else {
+      throw new UnauthorizedException('Please check your login credentials');
+    }
+  }
+
+  // firebase 회원가입시, 이미 가입된 유저인지 db에서 확인
+  async isSignUp(authCredentialsDto: AuthCredentialsDto): Promise<boolean> {
+    const { uid } = authCredentialsDto;
+
+    const user = await this.userRepository.findOneBy({ uid });
+    if (user) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.find(); // Use the find method to get all users

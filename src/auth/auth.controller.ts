@@ -45,7 +45,7 @@ export class AuthController {
     images,
     @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto,
     @Req() req: Request,
-  ): Promise<void> {
+  ): Promise<{ accessToken: string }> {
     let imgUrl: string = '';
 
     const uid = req['uid'];
@@ -64,7 +64,15 @@ export class AuthController {
       }),
     );
     authCredentialsDto.avatarUrl = imgUrl;
+
     await this.authService.signUp(authCredentialsDto);
+    return await this.authService.signIn(authCredentialsDto);
+  }
+
+  @Post('/profile')
+  @UseGuards(AuthGuard())
+  findUserData(@GetUser() user: User) {
+    return user;
   }
 
   @Post('/isSignUp')
@@ -72,31 +80,6 @@ export class AuthController {
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
   ): Promise<boolean> {
     return this.authService.isSignUp(authCredentialsDto);
-  }
-
-  @Post('/signup')
-  singUp(
-    @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto,
-  ): Promise<void> {
-    return this.authService.signUp(authCredentialsDto);
-  }
-
-  // @Post('/signin')
-  // signIn(
-  //   @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
-  // ): Promise<{ accessToken: string }> {
-  //   return this.authService.signIn(signInCredentialsDto);
-  // }
-
-  @Post('/signin')
-  signIn() {
-    return this.authService.signIn();
-  }
-
-  @Post('/profile')
-  @UseGuards(AuthGuard())
-  findUserData(@GetUser() user: User) {
-    return user;
   }
 
   @Get('/users')
