@@ -36,7 +36,6 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const decodedToken = await firebase.auth().verifyIdToken(token);
-      // const uid = decodedToken.uid;
       req['uid'] = decodedToken.uid;
       next();
     } catch (error) {

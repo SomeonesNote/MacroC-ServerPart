@@ -26,7 +26,6 @@ export class UserRepository extends Repository<User> {
       avatarUrl,
     });
 
-    console.log('Before saving user:', user);
     try {
       await this.save(user);
       console.log('User saved successfully');
