@@ -72,7 +72,6 @@ export class BuskingController {
       artistId,
       buskingDto,
     );
-
     return updatedBusking;
   }
 }

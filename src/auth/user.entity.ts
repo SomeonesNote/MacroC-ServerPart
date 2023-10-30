@@ -1,3 +1,4 @@
+import { IsOptional } from 'class-validator';
 import { Artist } from 'src/artist/artist.entity';
 import {
   BaseEntity,
@@ -17,14 +18,15 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsOptional()
   email: string;
 
   @Column()
-  username: string;
+  uid: string;
 
   @Column()
-  password: string;
+  username: string;
 
   @Column({ comment: 's3 업로드된 localtion url' })
   avatarUrl: string;

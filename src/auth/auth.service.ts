@@ -7,10 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import {
   AuthCredentialsDto,
-  SignInCredentialsDto,
   UpdatableUserInfos,
 } from './dto/auth-credential.dto';
-import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
 
@@ -23,30 +21,44 @@ export class AuthService {
   ) {}
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { email } = authCredentialsDto;
+    const { username } = authCredentialsDto;
 
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ username });
     if (user) {
-      throw new UnauthorizedException('Email already exists');
+      throw new UnauthorizedException(`Username '${username}' already exists`);
     }
     return this.userRepository.createUser(authCredentialsDto);
   }
 
   async signIn(
-    signInCredentialsDto: SignInCredentialsDto,
+    authCredentialsDto: AuthCredentialsDto,
   ): Promise<{ accessToken: string }> {
-    const { email, password } = signInCredentialsDto;
-    const user = await this.userRepository.findOne({ where: { email } });
+    const { uid } = authCredentialsDto;
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = { email };
+    const user = await this.userRepository.findOneBy({ uid });
+    if (user) {
+      const payload = { uid };
       const accessToken = await this.jwtService.sign(payload);
       const response = {
         accessToken,
       };
+      console.log(response);
+
       return response;
     } else {
       throw new UnauthorizedException('Please check your login credentials');
+    }
+  }
+
+  // firebase 회원가입시, 이미 가입된 유저인지 db에서 확인
+  async isSignUp(authCredentialsDto: AuthCredentialsDto): Promise<boolean> {
+    const { uid } = authCredentialsDto;
+
+    const user = await this.userRepository.findOneBy({ uid });
+    if (user) {
+      return true;
+    } else {
+      return false;
     }
   }
 
