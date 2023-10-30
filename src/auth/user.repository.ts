@@ -26,9 +26,12 @@ export class UserRepository extends Repository<User> {
       avatarUrl,
     });
 
+    console.log('Before saving user:', user);
     try {
       await this.save(user);
+      console.log('User saved successfully');
     } catch (error) {
+      console.log(error);
       if (error.code === '23505') {
         throw new ConflictException(`Username : '${username}' already exists`);
       } else {

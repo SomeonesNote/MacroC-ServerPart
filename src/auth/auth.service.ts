@@ -9,7 +9,6 @@ import {
   AuthCredentialsDto,
   UpdatableUserInfos,
 } from './dto/auth-credential.dto';
-// import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
 
