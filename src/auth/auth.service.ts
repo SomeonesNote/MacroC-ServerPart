@@ -7,10 +7,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import {
   AuthCredentialsDto,
-  SignInCredentialsDto,
   UpdatableUserInfos,
 } from './dto/auth-credential.dto';
-import * as bcrypt from 'bcryptjs';
+// import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
 
@@ -22,33 +21,45 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { email } = authCredentialsDto;
+  async isSignUp(authCredentialsDto: AuthCredentialsDto): Promise<boolean> {
+    const { uid } = authCredentialsDto;
 
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ uid });
     if (user) {
-      throw new UnauthorizedException('Email already exists');
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    const { username } = authCredentialsDto;
+
+    const user = await this.userRepository.findOneBy({ username });
+    if (user) {
+      throw new UnauthorizedException(`Username '${username}' already exists`);
     }
     return this.userRepository.createUser(authCredentialsDto);
   }
 
-  async signIn(
-    signInCredentialsDto: SignInCredentialsDto,
-  ): Promise<{ accessToken: string }> {
-    const { email, password } = signInCredentialsDto;
-    const user = await this.userRepository.findOne({ where: { email } });
+  async signIn() {}
+  // async signIn(
+  //   signInCredentialsDto: SignInCredentialsDto,
+  // ): Promise<{ accessToken: string }> {
+  //   const { email, password } = signInCredentialsDto;
+  //   const user = await this.userRepository.findOne({ where: { email } });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = { email };
-      const accessToken = await this.jwtService.sign(payload);
-      const response = {
-        accessToken,
-      };
-      return response;
-    } else {
-      throw new UnauthorizedException('Please check your login credentials');
-    }
-  }
+  //   if (user && (await bcrypt.compare(password, user.password))) {
+  //     const payload = { email };
+  //     const accessToken = await this.jwtService.sign(payload);
+  //     const response = {
+  //       accessToken,
+  //     };
+  //     return response;
+  //   } else {
+  //     throw new UnauthorizedException('Please check your login credentials');
+  //   }
+  // }
 
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.find(); // Use the find method to get all users
