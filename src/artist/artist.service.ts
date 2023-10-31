@@ -44,9 +44,9 @@ export class ArtistService {
     });
 
     const found = await this.artistRepository.findOneBy({ id: artistId });
-    const blockedArtisIds = user.blockedArtists.map((artist) => artist.id);
+    const blockedArtistIds = user.blockedArtists.map((artist) => artist.id);
 
-    if (!blockedArtisIds.includes(artistId)) {
+    if (!blockedArtistIds.includes(artistId)) {
       console.log(`${user.id}는 ${found.stageName}를 차단했습니다.`);
       throw new NotFoundException(
         `요청하신 ${found.stageName}를 찾을 수 없습니다.`,
@@ -57,7 +57,6 @@ export class ArtistService {
           `요청하신 ${found.stageName}를 찾을 수가 없습니다.`,
         );
       }
-
       return found;
     }
   }

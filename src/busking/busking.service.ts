@@ -64,9 +64,7 @@ export class BuskingService {
       throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
     } else {
       if (!found) {
-        throw new NotFoundException(
-          `Busking Performance with ID "${id}" not found`,
-        );
+        throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
       }
       return found;
     }
