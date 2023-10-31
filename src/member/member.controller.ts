@@ -22,6 +22,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadPath } from 'src/upload/uploadPath';
 import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { User } from 'src/auth/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('member')
 @UseGuards(AuthGuard())
@@ -64,16 +66,20 @@ export class MemberController {
     return await this.memberService.createMember(artistId, memberDto);
   }
 
-  @Get('/:id')
-  getArtistMemberById(@Param('id') id: number): Promise<Member> {
-    return this.memberService.getArtistMemberById(id);
-  }
-
   @Get('/getAll/:artistId')
   async getArtistMembers(
     @Param('artistId') artistId: number,
+    @GetUser() user: User,
   ): Promise<Member[]> {
-    return await this.memberService.getAllArtistMembers(artistId);
+    return await this.memberService.getAllArtistMembers(artistId, user.id);
+  }
+
+  @Get('/:id')
+  getArtistMemberById(
+    @Param('id') id: number,
+    @GetUser() user: User,
+  ): Promise<Member> {
+    return this.memberService.getArtistMemberById(id, user.id);
   }
 
   @Delete('/:id')
