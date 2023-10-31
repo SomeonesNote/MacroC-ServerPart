@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Unique(['stageName'])
+@Unique(['id'])
 export class Artist extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -48,13 +48,16 @@ export class Artist extends BaseEntity {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToMany(() => User, (user) => user.following)
-  // @JoinTable 'artist_followers_user' 삭제
-  followers: User[];
-
   @OneToMany(() => Member, (member) => member.artist, { eager: true })
   members: Member[];
 
   @OneToMany(() => Busking, (busking) => busking.artist, { eager: true })
   buskings: Busking[];
+
+  @ManyToMany(() => User, (user) => user.following)
+  // @JoinTable 'artist_followers_user' 삭제
+  followers: User[];
+
+  @ManyToMany(() => User, (user) => user.blockedArtists)
+  blockedUsers: User[];
 }

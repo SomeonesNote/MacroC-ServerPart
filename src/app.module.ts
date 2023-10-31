@@ -14,6 +14,7 @@ import { ArtistModule } from './artist/artist.module';
 import { MemberModule } from './member/member.module';
 import { BuskingModule } from './busking/busking.module';
 import { AuthMiddleware } from './auth/auth.middleware';
+import { BlockingModule } from './blocking/blocking.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthMiddleware } from './auth/auth.middleware';
     ArtistModule,
     MemberModule,
     BuskingModule,
+    BlockingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
