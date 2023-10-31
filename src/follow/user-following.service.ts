@@ -17,12 +17,15 @@ export class UserFollowingService {
   async followArtist(userId: number, artistId: number): Promise<void> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['following'],
+      relations: ['following', 'blockedArtists'],
     });
     const artist = await this.artistRepository.findOne({
       where: { id: artistId },
       relations: ['followers'],
     });
+
+    const followingIds = user.following.map((artist) => artist.id);
+    const blockedArtisIds = user.blockedArtists.map((artist) => artist.id);
 
     if (!user) {
       throw new Error('User not found');
@@ -30,11 +33,22 @@ export class UserFollowingService {
       throw new Error('Artist not found');
     }
 
-    user.following.push(artist);
-    await this.userRepository.save(user);
-
-    artist.followers.push(user);
-    await this.artistRepository.save(artist);
+    if (!blockedArtisIds.includes(artist.id)) {
+      if (!followingIds.includes(artist.id)) {
+        user.following.push(artist);
+        await this.userRepository.save(user);
+        artist.followers.push(user);
+        await this.artistRepository.save(artist);
+      } else {
+        throw new NotFoundException(
+          `요청하신 ${artist.id}는 이미 팔로우 중입니다.`,
+        );
+      }
+    } else {
+      throw new NotFoundException(
+        `요청하신 ${artist.stageName}를 찾을 수 없습니다.`,
+      );
+    }
   }
 
   async unfollowArtist(userId: number, artistId: number): Promise<void> {
