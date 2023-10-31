@@ -7,7 +7,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -50,17 +49,7 @@ export class Artist extends BaseEntity {
   user: User;
 
   @ManyToMany(() => User, (user) => user.following)
-  @JoinTable({
-    name: 'artist_followers_user',
-    joinColumn: {
-      name: 'artistId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'userId',
-      referencedColumnName: 'id',
-    },
-  })
+  // @JoinTable 'artist_followers_user' 삭제
   followers: User[];
 
   @OneToMany(() => Member, (member) => member.artist, { eager: true })

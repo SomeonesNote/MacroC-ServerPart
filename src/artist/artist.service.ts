@@ -10,11 +10,11 @@ import { UserFollowingService } from 'src/follow/user-following.service';
 @Injectable()
 export class ArtistService {
   constructor(
+    private userFollowingService: UserFollowingService,
     @InjectRepository(ArtistRepository)
     private artistRepository: ArtistRepository,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
-    private userFollowingService: UserFollowingService,
   ) {}
 
   async createArtist(
