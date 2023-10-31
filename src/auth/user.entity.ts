@@ -13,7 +13,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Unique(['email'])
+@Unique(['id'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -51,4 +51,18 @@ export class User extends BaseEntity {
     },
   })
   following: Artist[];
+
+  @ManyToMany(() => Artist, (artist) => artist.blockedUsers)
+  @JoinTable({
+    name: 'user_block_artist', // 중간 테이블의 이름 설정
+    joinColumn: {
+      name: 'userId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'artistId',
+      referencedColumnName: 'id',
+    },
+  })
+  blockedArtists: Artist[];
 }

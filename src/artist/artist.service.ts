@@ -24,17 +24,42 @@ export class ArtistService {
     return await this.artistRepository.createArtist(createArtistDto, user);
   }
 
-  async getAllArtiists(): Promise<Artist[]> {
-    return this.artistRepository.find();
+  async getAllArtiists(userId: number): Promise<Artist[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['blockedArtists'],
+    });
+
+    const blockedArtisIds = user.blockedArtists.map((artist) => artist.id);
+    const artists = this.artistRepository.find();
+    return (await artists).filter(
+      (artist) => !blockedArtisIds.includes(artist.id),
+    );
   }
 
-  async getArtistById(id: number): Promise<Artist> {
-    const found = await this.artistRepository.findOneBy({ id });
+  async getArtistById(artistId: number, userId?: number): Promise<Artist> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['blockedArtists'],
+    });
 
-    if (!found) {
-      throw new NotFoundException(`Artist with ID "${id}" not found`);
+    const found = await this.artistRepository.findOneBy({ id: artistId });
+    const blockedArtisIds = user.blockedArtists.map((artist) => artist.id);
+
+    if (!blockedArtisIds.includes(artistId)) {
+      console.log(`${user.id}는 ${found.stageName}를 차단했습니다.`);
+      throw new NotFoundException(
+        `요청하신 ${found.stageName}를 찾을 수 없습니다.`,
+      );
+    } else {
+      if (!found) {
+        throw new NotFoundException(
+          `요청하신 ${found.stageName}를 찾을 수가 없습니다.`,
+        );
+      }
+
+      return found;
     }
-    return found;
   }
 
   async deleteArtist(id: number): Promise<void> {
@@ -69,7 +94,7 @@ export class ArtistService {
     }
   }
 
-  async updateUser(
+  async updateArtist(
     id: number,
     user: User,
     createArtistDto: CreateArtistDto,

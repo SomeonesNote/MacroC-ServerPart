@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
@@ -20,8 +21,10 @@ import { User } from 'src/auth/user.entity';
 import { CreateArtistDto } from './dto/createArtistDto.dto';
 import { UploadImageServce } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('artist')
+@UseGuards(AuthGuard())
 export class ArtistController {
   constructor(
     private artistService: ArtistService,
@@ -29,13 +32,16 @@ export class ArtistController {
   ) {}
 
   @Get('/All')
-  getAllArtists(): Promise<Artist[]> {
-    return this.artistService.getAllArtiists();
+  getAllArtists(@GetUser() user: User): Promise<Artist[]> {
+    return this.artistService.getAllArtiists(user.id);
   }
 
   @Get('/:id')
-  getArtistById(@Param('id') id: number): Promise<Artist> {
-    return this.artistService.getArtistById(id);
+  getArtistById(
+    @GetUser() user: User,
+    @Param('id') id: number,
+  ): Promise<Artist> {
+    return this.artistService.getArtistById(id, user.id);
   }
 
   @Delete('/:id')
@@ -72,7 +78,7 @@ export class ArtistController {
     );
     createArtistDto.artistImage = imgUrl;
 
-    const updatedArtist = await this.artistService.updateUser(
+    const updatedArtist = await this.artistService.updateArtist(
       id,
       user,
       createArtistDto,

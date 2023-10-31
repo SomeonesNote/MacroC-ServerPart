@@ -53,33 +53,37 @@ export class AuthController {
 
     const username = authCredentialsDto.username;
 
-    await Promise.all(
-      images.map(async (image: Express.Multer.File) => {
-        const key = await this.uploadImageServce.upload(
-          UploadPath.profileImages,
-          username,
-          image,
-        );
-        imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${UploadPath.profileImages}/${username}/${key}`;
-      }),
-    );
-    authCredentialsDto.avatarUrl = imgUrl;
+    if (await this.authService.isSignUp(uid)) {
+      return await this.authService.signIn(authCredentialsDto);
+    } else {
+      await Promise.all(
+        images.map(async (image: Express.Multer.File) => {
+          const key = await this.uploadImageServce.upload(
+            UploadPath.profileImages,
+            username,
+            image,
+          );
+          imgUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${UploadPath.profileImages}/${username}/${key}`;
+        }),
+      );
+      authCredentialsDto.avatarUrl = imgUrl;
 
-    await this.authService.signUp(authCredentialsDto);
-    return await this.authService.signIn(authCredentialsDto);
+      await this.authService.signUp(authCredentialsDto);
+      return await this.authService.signIn(authCredentialsDto);
+    }
+  }
+
+  @Post('/isSignUp')
+  isSignUp(
+    @Body(ValidationPipe) uid: AuthCredentialsDto['uid'],
+  ): Promise<boolean> {
+    return this.authService.isSignUp(uid);
   }
 
   @Post('/profile')
   @UseGuards(AuthGuard())
   findUserData(@GetUser() user: User) {
     return user;
-  }
-
-  @Post('/isSignUp')
-  isSignUp(
-    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
-  ): Promise<boolean> {
-    return this.authService.isSignUp(authCredentialsDto);
   }
 
   @Get('/users')
