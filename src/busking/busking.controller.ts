@@ -17,6 +17,8 @@ import { BuskingService } from './busking.service';
 import { Busking } from './busking.entity';
 import { BuskingDto } from './dto/buskingDto';
 import { Artist } from 'src/artist/artist.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('busking')
 @UseGuards(AuthGuard())
@@ -41,16 +43,22 @@ export class BuskingController {
   }
 
   @Get('/getAll/:artistId')
-  getAllBusking(@Param('artistId') artistId: number): Promise<Busking[]> {
+  getAllBuskingByArtist(
+    @Param('artistId') artistId: number,
+    @GetUser() user: User,
+  ): Promise<Busking[]> {
     this.logger.verbose(
-      `Busking Performance is being fetched by Artist : ${artistId}`,
+      `Busking Performance is being fetched by Artist : ${artistId}, User : ${user.id}`,
     );
-    return this.buskingService.getAllBusking(artistId);
+    return this.buskingService.getAllBuskingByArtist(artistId, user.id);
   }
 
   @Get('/:id')
-  getBuskingById(@Param('id') id: number): Promise<Busking> {
-    return this.buskingService.getBuskingById(id);
+  getBuskingById(
+    @Param('id') id: number,
+    @GetUser() user: User,
+  ): Promise<Busking> {
+    return this.buskingService.getBuskingById(id, user.id);
   }
 
   @Delete('/:id')
