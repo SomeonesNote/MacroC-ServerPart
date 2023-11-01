@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,6 +12,7 @@ import {
 } from './dto/auth-credential.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -34,15 +36,27 @@ export class AuthService {
 
   async signIn(
     authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const { uid } = authCredentialsDto;
 
     const user = await this.userRepository.findOneBy({ uid });
     if (user) {
       const payload = { uid };
       const accessToken = await this.jwtService.sign(payload);
+      const refreshToken = await this.jwtService.sign(payload, {
+        expiresIn: '1y',
+      });
+
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax', // SameSite 설정 (Strict, Lax, None 중 선택)
+      });
+
       const response = {
         accessToken,
+        refreshToken,
       };
 
       console.log(response);
@@ -64,15 +78,44 @@ export class AuthService {
     }
   }
 
+  async refreshToken(
+    refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ accessToken: string }> {
+    try {
+      const { uid } = this.jwtService.verify(refreshToken);
+      const user = await this.userRepository.findOneBy({ uid });
+
+      if (user) {
+        const payload = { uid };
+        const newAccesstoken = await this.jwtService.sign(payload);
+
+        res.cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+        });
+
+        return {
+          accessToken: newAccesstoken,
+        };
+      } else {
+        throw new UnauthorizedException('로그인 정보를 다시 확인 바랍니다.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.find(); // Use the find method to get all users
   }
 
   async getUserById(id: number): Promise<User> {
-    const found = await this.userRepository.findOneBy({ id }); // Use the findOne method to get a user by id
+    const found = await this.userRepository.findOneBy({ id });
 
     if (!found) {
-      throw new NotFoundException(`User with ID "${id}" not found`); // Throw an error if the user is not found
+      throw new NotFoundException(`${found.username}를 발견하지 못했습니다.`);
     }
     return found;
   }
@@ -91,12 +134,13 @@ export class AuthService {
   }
 
   async deleteUser(id: number): Promise<void> {
+    const found = await this.userRepository.findOneBy({ id });
     const result = await this.userRepository.delete({
       id,
     });
 
     if (result.affected === 0) {
-      throw new NotFoundException(`User with ID "${id}" not found`);
+      throw new NotFoundException(`${found.username}를 발견하지 못했습니다.`);
     }
   }
 }

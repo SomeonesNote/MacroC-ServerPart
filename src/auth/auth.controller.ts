@@ -23,7 +23,7 @@ import { User } from './user.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user.decorator';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadImageServce as UploadImageService } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
 import { Request } from 'express';
 
@@ -31,7 +31,7 @@ import { Request } from 'express';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly uploadImageServce: UploadImageServce,
+    private readonly uploadImageServce: UploadImageService,
   ) {}
 
   @Post('/signup-with-image')
@@ -54,7 +54,7 @@ export class AuthController {
     const username = authCredentialsDto.username;
 
     if (await this.authService.isSignUp(uid)) {
-      return await this.authService.signIn(authCredentialsDto);
+      return await this.authService.signIn(authCredentialsDto, req.res);
     } else {
       await Promise.all(
         images.map(async (image: Express.Multer.File) => {
@@ -69,7 +69,7 @@ export class AuthController {
       authCredentialsDto.avatarUrl = imgUrl;
 
       await this.authService.signUp(authCredentialsDto);
-      return await this.authService.signIn(authCredentialsDto);
+      return await this.authService.signIn(authCredentialsDto, req.res);
     }
   }
 
