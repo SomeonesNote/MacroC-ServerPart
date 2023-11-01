@@ -21,11 +21,13 @@ export class AuthService {
   ) {}
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { username } = authCredentialsDto;
+    const { uid, username } = authCredentialsDto;
 
-    const user = await this.userRepository.findOneBy({ username });
+    const user = await this.userRepository.findOneBy({ uid });
     if (user) {
-      throw new UnauthorizedException(`Username '${username}' already exists`);
+      throw new UnauthorizedException(
+        `유저명 '${username}' 은 존재하고 있습니다.`,
+      );
     }
     return this.userRepository.createUser(authCredentialsDto);
   }
@@ -46,14 +48,14 @@ export class AuthService {
       console.log(response);
       return response;
     } else {
-      throw new UnauthorizedException('Please check your login credentials');
+      throw new UnauthorizedException('로그인 정보를 다시 확인 바랍니다.');
     }
   }
 
   // firebase 회원가입시, 이미 가입된 유저인지 db에서 확인
   async isSignUp(uid: string): Promise<boolean> {
     const user = await this.userRepository.findOneBy({
-      uid: AuthCredentialsDto[uid],
+      uid,
     });
     if (user) {
       return true;
