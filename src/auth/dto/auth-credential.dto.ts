@@ -17,6 +17,12 @@ export class AuthCredentialsDto {
   @IsOptional()
   avatarUrl: string;
 }
+
+export class SignInCredentialsDto {
+  @IsString()
+  uid: string;
+}
+
 export class UpdatableUserInfos {
   @IsString()
   @MinLength(4)

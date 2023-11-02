@@ -17,6 +17,7 @@ import {
 import { AuthService } from './auth.service';
 import {
   AuthCredentialsDto,
+  SignInCredentialsDto,
   UpdatableUserInfos,
 } from './dto/auth-credential.dto';
 import { User } from './user.entity';
@@ -71,6 +72,13 @@ export class AuthController {
       await this.authService.signUp(authCredentialsDto);
       return await this.authService.signIn(authCredentialsDto);
     }
+  }
+
+  @Post('/signin')
+  signIn(
+    @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
+  ): Promise<{ accessToken: string }> {
+    return this.authService.signIn(signInCredentialsDto);
   }
 
   @Post('/isSignUp')

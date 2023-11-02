@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import {
   AuthCredentialsDto,
+  SignInCredentialsDto,
   UpdatableUserInfos,
 } from './dto/auth-credential.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -31,9 +32,9 @@ export class AuthService {
   }
 
   async signIn(
-    authCredentialsDto: AuthCredentialsDto,
+    signInCredentialsDto: SignInCredentialsDto,
   ): Promise<{ accessToken: string }> {
-    const { uid } = authCredentialsDto;
+    const { uid } = signInCredentialsDto;
 
     const user = await this.userRepository.findOneBy({ uid });
     if (user) {
