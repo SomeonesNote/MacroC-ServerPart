@@ -9,6 +9,7 @@ async function bootstrap() {
   const serverConfig = config.get('server');
   const port = serverConfig.port;
 
+  // await app.listen(8080); // fly.io deployment
   await app.listen(3000);
   Logger.log(`Application running on port ${port}`);
 }
