@@ -19,7 +19,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { CreateArtistDto } from './dto/createArtistDto.dto';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadImageService } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -28,7 +28,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class ArtistController {
   constructor(
     private artistService: ArtistService,
-    private readonly uploadImageServce: UploadImageServce,
+    private readonly uploadImageService: UploadImageService,
   ) {}
 
   @Get('/All')
@@ -68,7 +68,7 @@ export class ArtistController {
 
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
-        const key = await this.uploadImageServce.upload(
+        const key = await this.uploadImageService.upload(
           UploadPath.artistImages,
           stageName,
           image,

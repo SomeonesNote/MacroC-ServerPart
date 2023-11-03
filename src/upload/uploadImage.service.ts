@@ -5,7 +5,7 @@ import * as AWS from 'aws-sdk';
 import { UploadPath } from './uploadPath';
 
 @Injectable()
-export class UploadImageServce {
+export class UploadImageService {
   private readonly s3Client = new S3Client({
     region: this.configService.getOrThrow('AWS_S3_REGION'),
   });

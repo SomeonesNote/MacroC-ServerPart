@@ -13,7 +13,7 @@ import { User } from './user.entity';
 import { UserFollowingController } from '../follow/user-following.controller';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserFollowingService } from 'src/follow/user-following.service';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadImageService } from 'src/upload/uploadImage.service';
 
 const jwtConfig = config.get('jwt');
 @Module({
@@ -44,7 +44,7 @@ const jwtConfig = config.get('jwt');
     UserFollowingService,
     ArtistRepository,
     UserRepository,
-    UploadImageServce,
+    UploadImageService,
   ],
   exports: [JwtStrategy, PassportModule],
 })

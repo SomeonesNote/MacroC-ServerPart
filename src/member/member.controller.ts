@@ -21,7 +21,7 @@ import { Member } from './member.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadPath } from 'src/upload/uploadPath';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadImageService } from 'src/upload/uploadImage.service';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 
@@ -30,7 +30,7 @@ import { GetUser } from 'src/auth/get-user.decorator';
 export class MemberController {
   constructor(
     private memberService: MemberService,
-    private readonly uploadImageServce: UploadImageServce,
+    private readonly uploadImageService: UploadImageService,
   ) {}
 
   @Post('/create/:artistId')
@@ -53,7 +53,7 @@ export class MemberController {
 
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
-        const key = await this.uploadImageServce.upload(
+        const key = await this.uploadImageService.upload(
           UploadPath.membersImages,
           memberName,
           image,
@@ -108,7 +108,7 @@ export class MemberController {
 
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
-        const key = await this.uploadImageServce.upload(
+        const key = await this.uploadImageService.upload(
           UploadPath.membersImages,
           memberName,
           image,

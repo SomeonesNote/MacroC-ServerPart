@@ -9,7 +9,7 @@ import { ArtistRepository } from './artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { UserFollowingController } from 'src/follow/user-following.controller';
 import { UserFollowingService } from 'src/follow/user-following.service';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadImageService } from 'src/upload/uploadImage.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 
@@ -35,7 +35,7 @@ import { ConfigService } from '@nestjs/config';
     ArtistRepository,
     UserRepository,
     UserFollowingService,
-    UploadImageServce,
+    UploadImageService,
   ],
 })
 export class ArtistModule {}

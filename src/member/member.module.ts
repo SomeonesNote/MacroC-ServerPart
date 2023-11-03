@@ -4,7 +4,7 @@ import { MemberController } from './member.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from './member.entity';
 import { MemberRepository } from './member.repository';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadImageService } from 'src/upload/uploadImage.service';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -26,7 +26,7 @@ import { AuthModule } from 'src/auth/auth.module';
   controllers: [MemberController],
   providers: [
     MemberService,
-    UploadImageServce,
+    UploadImageService,
     MemberRepository,
     ArtistRepository,
     UserRepository,

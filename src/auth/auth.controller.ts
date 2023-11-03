@@ -24,7 +24,7 @@ import { User } from './user.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user.decorator';
-import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { UploadImageService } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
 import { Request } from 'express';
 
@@ -32,7 +32,7 @@ import { Request } from 'express';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly uploadImageServce: UploadImageServce,
+    private readonly uploadImageService: UploadImageService,
   ) {}
 
   @Post('/signup-with-image')
@@ -59,7 +59,7 @@ export class AuthController {
     } else {
       await Promise.all(
         images.map(async (image: Express.Multer.File) => {
-          const key = await this.uploadImageServce.upload(
+          const key = await this.uploadImageService.upload(
             UploadPath.profileImages,
             username,
             image,
@@ -121,7 +121,7 @@ export class AuthController {
 
     await Promise.all(
       images.map(async (image: Express.Multer.File) => {
-        const key = await this.uploadImageServce.upload(
+        const key = await this.uploadImageService.upload(
           UploadPath.profileImages,
           username,
           image,
