@@ -1,2 +1,15 @@
+server:
+  # port: 3000
+  port: 8080
+
 db:
   synchronize: false
+  type: 'postgres'
+  host: 'macro-database.cepvscxgqsjs.ap-northeast-2.rds.amazonaws.com'
+  port: 5432
+  username: 'root'
+  password: 'yeongmin'
+  database: 'macroDatabase'
+
+jwt:
+  secret: 'topSecret51'
