@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -27,7 +26,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user.decorator';
 import { UploadImageService } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
-import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -46,17 +44,17 @@ export class AuthController {
     )
     images,
     @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto,
-    @Req() req: Request,
+    @Body(new ValidationPipe()) signInCredentialsDto: SignInCredentialsDto,
   ): Promise<{ accessToken: string }> {
     let imgUrl: string = '';
 
-    const uid = req['uid'];
+    const { uid } = signInCredentialsDto;
     authCredentialsDto.uid = uid;
 
     const username = authCredentialsDto.username;
 
-    if (await this.authService.isSignUp(uid)) {
-      return await this.authService.signIn(authCredentialsDto);
+    if (await this.authService.isSignUp(signInCredentialsDto)) {
+      return await this.authService.signIn(signInCredentialsDto);
     } else {
       await Promise.all(
         images.map(async (image: Express.Multer.File) => {
@@ -84,9 +82,9 @@ export class AuthController {
 
   @Post('/isSignUp')
   isSignUp(
-    @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
+    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
   ): Promise<boolean> {
-    return this.authService.isSignUp(signInCredentialsDto);
+    return this.authService.isSignUp(authCredentialsDto);
   }
 
   @Post('/usernameCheck')
