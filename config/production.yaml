@@ -3,7 +3,7 @@ server:
   port: 8080
 
 db:
-  synchronize: false
+  synchronize: true
   type: 'postgres'
   host: 'macro-database.cepvscxgqsjs.ap-northeast-2.rds.amazonaws.com'
   port: 5432
