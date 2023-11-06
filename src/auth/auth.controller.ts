@@ -19,6 +19,7 @@ import {
   AuthCredentialsDto,
   SignInCredentialsDto,
   UpdatableUserInfos,
+  UsernameCredentialsDto,
 } from './dto/auth-credential.dto';
 import { User } from './user.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -86,6 +87,13 @@ export class AuthController {
     @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
   ): Promise<boolean> {
     return this.authService.isSignUp(signInCredentialsDto);
+  }
+
+  @Post('/usernameCheck')
+  async usernameCheck(
+    @Body(ValidationPipe) usernameCredentialsDto: UsernameCredentialsDto,
+  ): Promise<boolean> {
+    return await this.authService.usernameCheck(usernameCredentialsDto);
   }
 
   @Post('/profile')

@@ -9,6 +9,7 @@ import {
   AuthCredentialsDto,
   SignInCredentialsDto,
   UpdatableUserInfos,
+  UsernameCredentialsDto,
 } from './dto/auth-credential.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
@@ -55,6 +56,19 @@ export class AuthService {
   async isSignUp(signInCredentialsDto: SignInCredentialsDto): Promise<boolean> {
     const { uid } = signInCredentialsDto;
     const user = await this.userRepository.findOneBy({ uid });
+
+    if (user) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async usernameCheck(
+    usernameCredentialsDto: UsernameCredentialsDto,
+  ): Promise<boolean> {
+    const { username } = usernameCredentialsDto;
+    const user = await this.userRepository.findOneBy({ username });
 
     if (user) {
       return true;

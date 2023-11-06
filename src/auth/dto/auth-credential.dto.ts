@@ -23,6 +23,11 @@ export class SignInCredentialsDto {
   uid: string;
 }
 
+export class UsernameCredentialsDto {
+  @IsString()
+  username: string;
+}
+
 export class UpdatableUserInfos {
   @IsString()
   @MinLength(4)
