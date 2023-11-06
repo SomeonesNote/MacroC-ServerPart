@@ -52,10 +52,10 @@ export class AuthService {
   }
 
   // firebase 회원가입시, 이미 가입된 유저인지 db에서 확인
-  async isSignUp(uid: string): Promise<boolean> {
-    const user = await this.userRepository.findOneBy({
-      uid: AuthCredentialsDto[uid],
-    });
+  async isSignUp(signInCredentialsDto: SignInCredentialsDto): Promise<boolean> {
+    const { uid } = signInCredentialsDto;
+    const user = await this.userRepository.findOneBy({ uid });
+
     if (user) {
       return true;
     } else {

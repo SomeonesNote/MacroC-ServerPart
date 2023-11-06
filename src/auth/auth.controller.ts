@@ -83,9 +83,9 @@ export class AuthController {
 
   @Post('/isSignUp')
   isSignUp(
-    @Body(ValidationPipe) uid: AuthCredentialsDto['uid'],
+    @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
   ): Promise<boolean> {
-    return this.authService.isSignUp(uid);
+    return this.authService.isSignUp(signInCredentialsDto);
   }
 
   @Post('/profile')
