@@ -14,6 +14,8 @@ import { UserFollowingController } from '../follow/user-following.controller';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserFollowingService } from 'src/follow/user-following.service';
 import { UploadImageService } from 'src/upload/uploadImage.service';
+import { AppleRevokeService } from './apple-revoke.service';
+import { AppleRevokeController } from './apple-revoke.controller';
 
 const jwtConfig = config.get('jwt');
 @Module({
@@ -37,11 +39,12 @@ const jwtConfig = config.get('jwt');
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AuthController, UserFollowingController],
+  controllers: [AuthController, UserFollowingController, AppleRevokeController],
   providers: [
     JwtStrategy,
     AuthService,
     UserFollowingService,
+    AppleRevokeService,
     ArtistRepository,
     UserRepository,
     UploadImageService,
