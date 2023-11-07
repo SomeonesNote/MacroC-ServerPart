@@ -1,23 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs';
+import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
 import * as qs from 'querystring';
-import * as path from 'path';
-import axios from 'axios';
 
 @Injectable()
 export class AppleRevokeService {
   constructor() {}
 
   makeJwt(): string {
-    const privateKeyPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'keys',
-      `AuthKey_5RAW24GM4G.p8`,
-    );
-    const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
+    const privateKey = process.env.AUTH_KEY;
     const token = jwt.sign(
       {
         iss: process.env.TEAM_ID,
