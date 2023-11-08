@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class BuskingDto {
   @IsNotEmpty()
@@ -15,7 +15,8 @@ export class BuskingDto {
 
   @IsNotEmpty()
   BuskingEndTime: Date;
-}
 
-// 37.5797, 126.9771
-// 37.5797, 126.9768
+  @IsString()
+  @IsOptional()
+  artistImage: string;
+}
