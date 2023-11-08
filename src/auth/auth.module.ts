@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
+import { TestingUserRepository, UserRepository } from './user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
@@ -44,6 +44,7 @@ const jwtConfig = config.get('jwt');
     UserFollowingService,
     ArtistRepository,
     UserRepository,
+    TestingUserRepository,
     UploadImageServce,
   ],
   exports: [JwtStrategy, PassportModule],

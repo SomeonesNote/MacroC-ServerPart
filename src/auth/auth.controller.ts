@@ -17,6 +17,7 @@ import {
 import { AuthService } from './auth.service';
 import {
   AuthCredentialsDto,
+  TestingDto,
   UpdatableUserInfos,
 } from './dto/auth-credential.dto';
 import { User } from './user.entity';
@@ -33,6 +34,29 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly uploadImageServce: UploadImageService,
   ) {}
+
+  @Post('/signup')
+  async signUp(@Body(ValidationPipe) testingDto: TestingDto): Promise<void> {
+    return this.authService.testingSignUp(testingDto);
+  }
+
+  @Post('/signin')
+  async signIn(
+    @Body(ValidationPipe) testingDto: TestingDto,
+    @Req() req: Request,
+  ): Promise<{ accessToken: string }> {
+    return this.authService.testingSignIn(testingDto, req.res);
+  }
+
+  @Post('refreshToken')
+  async refreshToken(@Req() req: Request): Promise<{ accessToken: string }> {
+    const refreshToken = req.cookies.refreshToken;
+    console.log(req.cookies);
+    console.log(refreshToken);
+    if (!refreshToken) throw new Error('No refreshToken');
+    return this.authService.testingRefreshToken(refreshToken, req.res);
+    // return this.authService.refreshToken(refreshToken, req.res);
+  }
 
   @Post('/signup-with-image')
   @UseInterceptors(FilesInterceptor('images'))
