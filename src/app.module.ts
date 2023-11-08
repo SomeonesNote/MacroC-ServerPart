@@ -15,6 +15,7 @@ import { MemberModule } from './member/member.module';
 import { BuskingModule } from './busking/busking.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { BlockingModule } from './blocking/blocking.module';
+import { ReportingModule } from './reporting/reporting.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { BlockingModule } from './blocking/blocking.module';
     MemberModule,
     BuskingModule,
     BlockingModule,
+    ReportingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
