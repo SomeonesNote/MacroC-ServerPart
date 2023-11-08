@@ -21,10 +21,11 @@ import { User } from 'src/auth/user.entity';
 import { CreateArtistDto } from './dto/createArtistDto.dto';
 import { UploadImageServce } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('artist')
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 export class ArtistController {
   constructor(
     private artistService: ArtistService,

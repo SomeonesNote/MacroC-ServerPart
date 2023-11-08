@@ -14,6 +14,7 @@ import { UserFollowingController } from '../follow/user-following.controller';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserFollowingService } from 'src/follow/user-following.service';
 import { UploadImageServce } from 'src/upload/uploadImage.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 const jwtConfig = config.get('jwt');
 @Module({
@@ -40,12 +41,13 @@ const jwtConfig = config.get('jwt');
   controllers: [AuthController, UserFollowingController],
   providers: [
     JwtStrategy,
+    JwtAuthGuard,
     AuthService,
     UserFollowingService,
+    UploadImageServce,
     ArtistRepository,
     UserRepository,
     TestingUserRepository,
-    UploadImageServce,
   ],
   exports: [JwtStrategy, PassportModule],
 })

@@ -22,11 +22,12 @@ import {
 } from './dto/auth-credential.dto';
 import { User } from './user.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user.decorator';
 import { UploadImageServce as UploadImageService } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
 import { Request } from 'express';
+import { JwtAuthGuard } from './jwt-auth.guard';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -105,7 +106,7 @@ export class AuthController {
   }
 
   @Post('/profile')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   findUserData(@GetUser() user: User) {
     return user;
   }

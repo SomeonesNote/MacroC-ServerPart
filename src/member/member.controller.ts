@@ -18,15 +18,16 @@ import { MemberService } from './member.service';
 import { MemberDto } from './dto/memberDto';
 import { Artist } from 'src/artist/artist.entity';
 import { Member } from './member.entity';
-import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadPath } from 'src/upload/uploadPath';
 import { UploadImageServce } from 'src/upload/uploadImage.service';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('member')
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 export class MemberController {
   constructor(
     private memberService: MemberService,

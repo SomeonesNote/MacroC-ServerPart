@@ -12,16 +12,17 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { BuskingService } from './busking.service';
 import { Busking } from './busking.entity';
 import { BuskingDto } from './dto/buskingDto';
 import { Artist } from 'src/artist/artist.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('busking')
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 export class BuskingController {
   private logger = new Logger('BuskingController');
   constructor(private buskingService: BuskingService) {}

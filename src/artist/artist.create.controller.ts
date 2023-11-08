@@ -14,13 +14,14 @@ import { CreateArtistDto } from './dto/createArtistDto.dto';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { Artist } from './artist.entity';
-import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadImageServce } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('artist-POST')
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 export class ArtistCreateController {
   constructor(
     private readonly artistService: ArtistService,
