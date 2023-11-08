@@ -3,9 +3,9 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { User } from './user.entity';
+import { TestingUser, User } from './user.entity';
 import { DataSource, Repository } from 'typeorm';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { AuthCredentialsDto, TestingDto } from './dto/auth-credential.dto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -20,6 +20,34 @@ export class UserRepository extends Repository<User> {
       username,
       uid,
       avatarUrl,
+    });
+
+    try {
+      await this.save(user);
+      console.log('User saved successfully');
+    } catch (error) {
+      console.log(error);
+      if (error.code === '23505') {
+        throw new ConflictException(`Username : '${username}' already exists`);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+}
+
+@Injectable()
+export class TestingUserRepository extends Repository<TestingUser> {
+  constructor(dataSource: DataSource) {
+    super(TestingUser, dataSource.createEntityManager());
+  }
+
+  async createTestingUser(testingDto: TestingDto): Promise<void> {
+    const { username, email } = testingDto;
+
+    const user = this.create({
+      username,
+      email,
     });
 
     try {

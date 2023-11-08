@@ -28,3 +28,11 @@ export class UpdatableUserInfos {
   @IsOptional()
   avatarUrl: string;
 }
+
+export class TestingDto {
+  @IsString()
+  email: string;
+
+  @IsString()
+  username: string;
+}
