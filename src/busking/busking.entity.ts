@@ -31,6 +31,9 @@ export class Busking extends BaseEntity {
   // BuskingEndTime: string;
   BuskingEndTime: Date;
 
+  @Column()
+  artistImage: string;
+
   @ManyToOne(() => Artist, (artist) => artist.buskings, { eager: false })
   artist: Artist;
 }

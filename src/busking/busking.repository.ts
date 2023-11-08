@@ -20,6 +20,7 @@ export class BuskingRepository extends Repository<Busking> {
       BuskingInfo,
       BuskingStartTime,
       BuskingEndTime,
+      artistImage,
     } = buskingDto;
 
     const busking = this.create({
@@ -28,6 +29,7 @@ export class BuskingRepository extends Repository<Busking> {
       BuskingInfo,
       BuskingStartTime,
       BuskingEndTime,
+      artistImage,
       artist,
     });
 
