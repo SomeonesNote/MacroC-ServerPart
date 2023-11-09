@@ -60,7 +60,6 @@ export class BuskingService {
     const blockedBuskingsIds = blockedArtisBuskings.map(
       (busking) => busking.id,
     );
-
     if (blockedBuskingsIds.includes(found.id)) {
       throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
     } else {
@@ -81,9 +80,7 @@ export class BuskingService {
     });
 
     if (result.affected === 0) {
-      throw new NotFoundException(
-        `Busking Performance with ID "${id}" not found`,
-      );
+      throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
     }
   }
 

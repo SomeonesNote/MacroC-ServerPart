@@ -61,7 +61,7 @@ export class BuskingController {
     return this.buskingService.getBuskingById(id, user.id);
   }
 
-  @Delete('/:id')
+  @Delete('/:artistId/:id')
   deleteBusking(
     @Param('id', ParseIntPipe) id: number,
     @Param('artistId') artistId: number,
