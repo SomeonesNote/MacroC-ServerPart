@@ -79,26 +79,36 @@ export class UserFollowingService {
   async getFollowersOfArtist(artistId: number): Promise<User[]> {
     const artist = await this.artistRepository.findOne({
       where: { id: artistId },
-      relations: ['followers'],
+      relations: ['followers', 'blockedUsers'],
     });
+    const blokckedUserIds = artist.blockedUsers.map((user) => user.id);
+    const followingUserIds = artist.followers.map((user) => user.id);
+    const returnUserIds = followingUserIds.filter(
+      (userId) => !blokckedUserIds.includes(userId),
+    );
 
     if (!artist) {
-      throw new NotFoundException(`Artist with ID "${artistId}" not found`);
+      throw new NotFoundException(`${artist.stageName}을 찾을 수 없습니다.`);
     }
-
-    return artist.followers;
+    return artist.followers.filter((user) => returnUserIds.includes(user.id));
   }
 
   async getFollowingOfUser(userId: number): Promise<Artist[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['following'],
+      relations: ['following', 'blockedArtists'],
     });
+    const blockedArtistIds = user.blockedArtists.map((artist) => artist.id);
+    const followArtistIds = user.following.map((artist) => artist.id);
+    const returnArtistIds = followArtistIds.filter(
+      (artistId) => !blockedArtistIds.includes(artistId),
+    );
 
     if (!user) {
-      throw new NotFoundException(`User with ID "${userId}" not found`);
+      throw new NotFoundException(`${user.username}를 찾을 수 없습니다.`);
     }
-
-    return user.following;
+    return user.following.filter((artist) =>
+      returnArtistIds.includes(artist.id),
+    );
   }
 }
