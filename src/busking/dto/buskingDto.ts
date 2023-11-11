@@ -7,6 +7,7 @@ export class BuskingDto {
   @IsNotEmpty()
   latitude: number;
 
+  @IsString()
   @IsNotEmpty()
   BuskingInfo: string;
 
@@ -15,6 +16,10 @@ export class BuskingDto {
 
   @IsNotEmpty()
   BuskingEndTime: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  stageName: string;
 
   @IsString()
   @IsOptional()

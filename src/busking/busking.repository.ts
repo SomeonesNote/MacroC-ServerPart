@@ -20,6 +20,7 @@ export class BuskingRepository extends Repository<Busking> {
       BuskingInfo,
       BuskingStartTime,
       BuskingEndTime,
+      stageName,
       artistImage,
     } = buskingDto;
 
@@ -29,6 +30,7 @@ export class BuskingRepository extends Repository<Busking> {
       BuskingInfo,
       BuskingStartTime,
       BuskingEndTime,
+      stageName,
       artistImage,
       artist,
     });
