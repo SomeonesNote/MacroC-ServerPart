@@ -24,6 +24,8 @@ export class BuskingService {
     const artist = await this.artistRepository.findOne({
       where: { id: artistId },
     });
+
+    buskingDto.stageName = artist.stageName;
     buskingDto.artistImage = artist.artistImage;
     return await this.buskingRepository.createBusking(buskingDto, artist);
   }
