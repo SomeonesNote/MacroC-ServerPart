@@ -16,6 +16,7 @@ import { BuskingModule } from './busking/busking.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { BlockingModule } from './blocking/blocking.module';
 import { ReportingModule } from './reporting/reporting.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ReportingModule } from './reporting/reporting.module';
     BuskingModule,
     BlockingModule,
     ReportingModule,
+    JwtModule.register({}),
   ],
   controllers: [AppController],
   providers: [AppService],
