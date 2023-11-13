@@ -8,7 +8,6 @@ import { PassportModule } from '@nestjs/passport';
 import { AppleStrategy, JwtStrategy } from './jwt.strategy';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
-import * as config from 'config';
 import { User } from './user.entity';
 import { UserFollowingController } from '../follow/user-following.controller';
 import { ArtistRepository } from 'src/artist/artist.repository';
@@ -16,6 +15,7 @@ import { UserFollowingService } from 'src/follow/user-following.service';
 import { UploadImageService } from 'src/upload/uploadImage.service';
 import { AppleAuthService } from './apple-auth.service';
 import { AppleAuthController } from './apple-auth.controller';
+import * as config from 'config';
 
 const jwtConfig = config.get('jwt');
 @Module({
