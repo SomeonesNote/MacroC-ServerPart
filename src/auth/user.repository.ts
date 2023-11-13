@@ -14,9 +14,10 @@ export class UserRepository extends Repository<User> {
   }
 
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { username, uid, avatarUrl } = authCredentialsDto;
+    const { email, username, uid, avatarUrl } = authCredentialsDto;
 
     const user = this.create({
+      email,
       username,
       uid,
       avatarUrl,
@@ -28,7 +29,9 @@ export class UserRepository extends Repository<User> {
     } catch (error) {
       console.log(error);
       if (error.code === '23505') {
-        throw new ConflictException(`Username : '${username}' already exists`);
+        throw new ConflictException(
+          `유저명 : '${username}'은 이미 존재합니다.`,
+        );
       } else {
         throw new InternalServerErrorException();
       }

@@ -1,4 +1,3 @@
-import { IsOptional } from 'class-validator';
 import { Artist } from 'src/artist/artist.entity';
 import {
   BaseEntity,
@@ -18,8 +17,7 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
-  @IsOptional()
+  @Column()
   email: string;
 
   @Column()
