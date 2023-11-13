@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
 import * as qs from 'querystring';
 
 @Injectable()
-export class AppleRevokeService {
-  constructor() {}
+export class AppleAuthService {
+  constructor(private jwtService: JwtService) {}
 
   makeJwt(): string {
     const privateKey = process.env.AUTH_KEY;
@@ -81,5 +82,23 @@ export class AppleRevokeService {
       console.log('Error:', error.response.data);
       throw error;
     }
+  }
+
+  async registerByIDToken(payload): Promise<string> {
+    if (payload.hasOwnProperty('id_token')) {
+      let email;
+
+      const decodedObj = await this.jwtService.decode(payload.id_token);
+      const uid = decodedObj.sub || '';
+      console.log('uid:', uid);
+
+      if (decodedObj.hasOwnProperty('email')) {
+        const email = await decodedObj.email;
+        console.log('email:', email);
+      }
+
+      return email && uid;
+    }
+    throw new UnauthorizedException();
   }
 }
