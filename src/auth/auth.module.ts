@@ -16,6 +16,7 @@ import { UploadImageService } from 'src/upload/uploadImage.service';
 import { AppleAuthService } from './apple-auth.service';
 import { AppleAuthController } from './apple-auth.controller';
 import * as config from 'config';
+import { ArtistService } from 'src/artist/artist.service';
 
 const jwtConfig = config.get('jwt');
 @Module({
@@ -44,11 +45,12 @@ const jwtConfig = config.get('jwt');
     JwtStrategy,
     AppleStrategy,
     AuthService,
+    ArtistService,
     UserFollowingService,
     AppleAuthService,
+    UploadImageService,
     ArtistRepository,
     UserRepository,
-    UploadImageService,
   ],
   exports: [JwtStrategy, AppleStrategy, PassportModule],
 })

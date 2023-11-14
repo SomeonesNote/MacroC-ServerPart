@@ -82,6 +82,7 @@ export class ArtistService {
     artist.followers = artist.followers.filter((user) => user.id === null);
     artist.members = null;
     artist.buskings = null;
+    artist.blockedUsers = null;
 
     await this.userRepository.save(user);
     await this.artistRepository.save(artist);

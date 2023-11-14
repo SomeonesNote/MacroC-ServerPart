@@ -13,6 +13,8 @@ import {
 } from './dto/auth-credential.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
+import { ArtistService } from 'src/artist/artist.service';
+import { ArtistRepository } from 'src/artist/artist.repository';
 
 @Injectable()
 export class AuthService {
@@ -20,14 +22,16 @@ export class AuthService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private jwtService: JwtService,
+    private artistService: ArtistService,
+    private artistRepository: ArtistRepository,
   ) {}
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { username } = authCredentialsDto;
+    const { uid } = authCredentialsDto;
 
-    const user = await this.userRepository.findOneBy({ username });
+    const user = await this.userRepository.findOneBy({ uid });
     if (user) {
-      throw new UnauthorizedException(`Username '${username}' already exists`);
+      throw new UnauthorizedException(`${uid}는 이미 존재합니다.`);
     }
     return this.userRepository.createUser(authCredentialsDto);
   }
@@ -52,7 +56,6 @@ export class AuthService {
     }
   }
 
-  // firebase 회원가입시, 이미 가입된 유저인지 db에서 확인
   async isSignUp(signInCredentialsDto: SignInCredentialsDto): Promise<boolean> {
     const { uid } = signInCredentialsDto;
     const user = await this.userRepository.findOneBy({ uid });
@@ -104,12 +107,23 @@ export class AuthService {
   }
 
   async deleteUser(id: number): Promise<void> {
-    const result = await this.userRepository.delete({
-      id,
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['artist'],
     });
+    const artist = await this.artistRepository.findOne({
+      where: { user: { id } },
+      relations: ['user'],
+    });
+    user.artist = null;
+    artist.user = null;
 
-    if (result.affected === 0) {
-      throw new NotFoundException(`User with ID "${id}" not found`);
+    if (!user) {
+      throw new NotFoundException(`유저를 발견하지 못했습니다.`);
+    } else {
+      await this.artistService.deleteArtist(artist.id);
+      await this.artistRepository.delete(artist.id);
+      await this.userRepository.delete(user.id);
     }
   }
 }
