@@ -21,7 +21,7 @@ import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 
 @Controller('busking')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class BuskingController {
   private logger = new Logger('BuskingController');
   constructor(private buskingService: BuskingService) {}

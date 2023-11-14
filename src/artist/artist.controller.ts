@@ -24,7 +24,7 @@ import { UploadPath } from 'src/upload/uploadPath';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('artist')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class ArtistController {
   constructor(
     private artistService: ArtistService,

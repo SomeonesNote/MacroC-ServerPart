@@ -26,7 +26,7 @@ import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('member')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class MemberController {
   constructor(
     private memberService: MemberService,

@@ -20,7 +20,7 @@ import { UploadImageService } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
 
 @Controller('artist-POST')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class ArtistCreateController {
   constructor(
     private readonly artistService: ArtistService,

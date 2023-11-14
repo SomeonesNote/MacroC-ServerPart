@@ -5,17 +5,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
+import { AppleStrategy, JwtStrategy } from './jwt.strategy';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
-import * as config from 'config';
 import { User } from './user.entity';
 import { UserFollowingController } from '../follow/user-following.controller';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserFollowingService } from 'src/follow/user-following.service';
 import { UploadImageService } from 'src/upload/uploadImage.service';
-import { AppleRevokeService } from './apple-revoke.service';
-import { AppleRevokeController } from './apple-revoke.controller';
+import { AppleAuthService } from './apple-auth.service';
+import { AppleAuthController } from './apple-auth.controller';
+import * as config from 'config';
+import { ArtistService } from 'src/artist/artist.service';
 
 const jwtConfig = config.get('jwt');
 @Module({
@@ -39,16 +40,18 @@ const jwtConfig = config.get('jwt');
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AuthController, UserFollowingController, AppleRevokeController],
+  controllers: [AuthController, UserFollowingController, AppleAuthController],
   providers: [
     JwtStrategy,
+    AppleStrategy,
     AuthService,
+    ArtistService,
     UserFollowingService,
-    AppleRevokeService,
+    AppleAuthService,
+    UploadImageService,
     ArtistRepository,
     UserRepository,
-    UploadImageService,
   ],
-  exports: [JwtStrategy, PassportModule],
+  exports: [JwtStrategy, AppleStrategy, PassportModule],
 })
 export class AuthModule {}
