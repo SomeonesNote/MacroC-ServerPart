@@ -10,7 +10,7 @@ import { ReportDto } from './dto/reportDto';
 import { Report } from './reporting.entity';
 
 @Controller('reporting')
-// @UseGuards(AuthGuard())
+// @UseGuards(AuthGuard('jwt'))
 export class ReportingController {
   constructor(private reportingService: ReportingService) {}
 
