@@ -1,12 +1,32 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
+import { AuthService } from './auth.service';
 import * as jwt from 'jsonwebtoken';
 import * as qs from 'querystring';
 
 @Injectable()
 export class AppleAuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private authService: AuthService,
+  ) {}
+
+  async registerByIDToken(payload, refreshToken): Promise<string> {
+    console.log('클라이언트에서 방문함 2');
+    if (payload.hasOwnProperty('id_token')) {
+      const decodedObj = await this.jwtService.decode(payload.id_token);
+      const uid = decodedObj.sub || '';
+      const email = decodedObj.hasOwnProperty('email') ? decodedObj.email : '';
+
+      console.log('uid:', uid);
+      console.log('email:', email);
+      console.log('refreshToken:', refreshToken);
+
+      return email && uid && refreshToken;
+    }
+    throw new UnauthorizedException();
+  }
 
   makeJwt(): string {
     const privateKey = process.env.AUTH_KEY;
@@ -82,23 +102,5 @@ export class AppleAuthService {
       console.log('Error:', error.response.data);
       throw error;
     }
-  }
-
-  async registerByIDToken(payload): Promise<string> {
-    if (payload.hasOwnProperty('id_token')) {
-      let email;
-
-      const decodedObj = await this.jwtService.decode(payload.id_token);
-      const uid = decodedObj.sub || '';
-      console.log('uid:', uid);
-
-      if (decodedObj.hasOwnProperty('email')) {
-        const email = await decodedObj.email;
-        console.log('email:', email);
-      }
-
-      return email && uid;
-    }
-    throw new UnauthorizedException();
   }
 }

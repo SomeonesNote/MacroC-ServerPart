@@ -13,8 +13,6 @@ import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import * as config from 'config';
-import { AuthService } from './auth.service';
-import { AppleAuthService } from './apple-auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(JwtAuthStrategy, 'jwt') {
@@ -44,10 +42,7 @@ export class AppleStrategy extends PassportStrategy(
   AppleAuthStrategy,
   'apple',
 ) {
-  constructor(
-    private authService: AuthService,
-    private appleAuthService: AppleAuthService,
-  ) {
+  constructor() {
     super({
       clientID: process.env.CLIENT_ID,
       teamID: process.env.TEAM_ID,
@@ -64,21 +59,15 @@ export class AppleStrategy extends PassportStrategy(
     _accessToken: string,
     _refreshToken: string,
     profile: Profile,
-  ): Promise<{ name: string; email: string; appleId: string }> {
+  ): Promise<{ email: string; appleId: string; refreshToken: string }> {
     try {
-      const jwt = this.appleAuthService.makeJwt();
-
-      if (jwt) {
-        const userEntity = {
-          name: profile.name?.firstName,
-          email: profile.email,
-          appleId: profile.id,
-        };
-
-        return userEntity;
-      } else {
-        throw new UnauthorizedException('JWT creation failed');
-      }
+      const userEntity = {
+        email: profile.email,
+        appleId: profile.id,
+        refreshToken: _refreshToken,
+      };
+      console.log(profile.email);
+      return userEntity;
     } catch (err) {
       throw new InternalServerErrorException(err.message);
     }

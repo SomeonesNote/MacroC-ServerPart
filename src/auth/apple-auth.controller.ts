@@ -7,6 +7,7 @@ import {
   Query,
   UnauthorizedException,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AppleAuthService } from './apple-auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,14 +19,19 @@ export class AppleAuthController {
   @Get('/login')
   @UseGuards(AuthGuard('apple'))
   async appleLogin() {
+    console.log('클라이언트에서 방문함 0');
     return HttpStatus.OK;
   }
 
   @Post('/callback')
   @UseGuards(AuthGuard('apple'))
-  async appleLoginRedirect(@Body() payload): Promise<string> {
+  async appleLoginRedirect(@Body() payload, @Request() req): Promise<string> {
+    console.log('클라이언트에서 방문함 1');
     if (payload.id_token) {
-      return this.appleAuthService.registerByIDToken(payload);
+      return this.appleAuthService.registerByIDToken(
+        payload,
+        req.user.refreshToken,
+      );
     }
     throw new UnauthorizedException();
   }
