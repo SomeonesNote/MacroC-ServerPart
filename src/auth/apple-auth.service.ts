@@ -1,32 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { AuthService } from './auth.service';
 import * as jwt from 'jsonwebtoken';
 import * as qs from 'querystring';
 
 @Injectable()
 export class AppleAuthService {
-  constructor(
-    private jwtService: JwtService,
-    private authService: AuthService,
-  ) {}
-
-  async registerByIDToken(payload, refreshToken): Promise<string> {
-    console.log('클라이언트에서 방문함 2');
-    if (payload.hasOwnProperty('id_token')) {
-      const decodedObj = await this.jwtService.decode(payload.id_token);
-      const uid = decodedObj.sub || '';
-      const email = decodedObj.hasOwnProperty('email') ? decodedObj.email : '';
-
-      console.log('uid:', uid);
-      console.log('email:', email);
-      console.log('refreshToken:', refreshToken);
-
-      return email && uid && refreshToken;
-    }
-    throw new UnauthorizedException();
-  }
+  constructor() {}
 
   makeJwt(): string {
     const privateKey = process.env.AUTH_KEY;
@@ -36,7 +15,7 @@ export class AppleAuthService {
         iat: Math.floor(Date.now() / 1000),
         exp: Math.floor(Date.now() / 1000) + 120,
         aud: 'https://appleid.apple.com',
-        sub: process.env.CLIENT_ID,
+        sub: process.env.APP_ID,
       },
       privateKey,
       {
@@ -54,9 +33,10 @@ export class AppleAuthService {
     const client_secret = this.makeJwt();
     const data = {
       code,
-      client_id: process.env.CLIENT_ID,
+      client_id: process.env.APP_ID,
       client_secret,
       grant_type: 'authorization_code',
+      redirect_uri: 'https://macro-app.fly.dev/apple-auth/callback',
     };
 
     try {
@@ -77,11 +57,11 @@ export class AppleAuthService {
     }
   }
 
-  async getRevokeToken(refresh_token: string): Promise<string> {
+  async getRevoke(refresh_token: string): Promise<boolean> {
     const client_secret = this.makeJwt();
     const data = {
       token: refresh_token,
-      client_id: process.env.CLIENT_ID,
+      client_id: process.env.APP_ID,
       client_secret,
       token_type_hint: 'refresh_token',
     };
@@ -97,9 +77,8 @@ export class AppleAuthService {
         },
       );
       console.log(res.data);
-      return 'Complete';
+      return true;
     } catch (error) {
-      console.log('Error:', error.response.data);
       throw error;
     }
   }
