@@ -6,15 +6,21 @@ import { CreateArtistDto } from './dto/createArtistDto.dto';
 import { Artist } from './artist.entity';
 import { UserRepository } from 'src/auth/user.repository';
 import { UserFollowingService } from 'src/follow/user-following.service';
+import { BuskingService } from 'src/busking/busking.service';
+import { MemberService } from 'src/member/member.service';
+import { BlockingService } from 'src/blocking/blocking.service';
 
 @Injectable()
 export class ArtistService {
   constructor(
-    private userFollowingService: UserFollowingService,
     @InjectRepository(ArtistRepository)
     private artistRepository: ArtistRepository,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    private buskingService: BuskingService,
+    private memberService: MemberService,
+    private userFollowingService: UserFollowingService,
+    private blockingService: BlockingService,
   ) {}
 
   async createArtist(
@@ -64,25 +70,42 @@ export class ArtistService {
   async deleteArtist(id: number): Promise<void> {
     const user = await this.userRepository.findOne({
       where: { artist: { id } },
-      relations: ['following'],
+      relations: ['following', 'blockedArtists'],
     });
 
     const artist = await this.artistRepository.findOne({
       where: { id: id },
-      relations: ['followers'],
+      relations: ['followers', 'blockedUsers', 'buskings'],
     });
+
+    user.artist = null;
+
+    artist.blockedUsers
+      .filter((user) => user.id !== null)
+      .map((user) =>
+        this.blockingService.unblocking({
+          userId: user.id,
+          artistId: artist.id,
+        }),
+      );
+    artist.blockedUsers = artist.blockedUsers.filter(
+      (user) => user.id === null,
+    );
 
     artist.followers
       .filter((user) => user.id !== null)
       .map((user) =>
         this.userFollowingService.unfollowArtist(user.id, artist.id),
       );
-
-    user.artist = null;
     artist.followers = artist.followers.filter((user) => user.id === null);
-    artist.members = null;
+
+    // if (artist.members !== null) {
+    //   await this.memberService.deleteAllMemers(id);
+    //   artist.members = null;
+    // }
+
+    await this.buskingService.deleteAllBuskingByArtist(id);
     artist.buskings = null;
-    artist.blockedUsers = null;
 
     await this.userRepository.save(user);
     await this.artistRepository.save(artist);

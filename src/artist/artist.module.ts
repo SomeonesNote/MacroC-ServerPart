@@ -12,6 +12,11 @@ import { UserFollowingService } from 'src/follow/user-following.service';
 import { UploadImageService } from 'src/upload/uploadImage.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
+import { MemberService } from 'src/member/member.service';
+import { BlockingService } from 'src/blocking/blocking.service';
+import { BuskingService } from 'src/busking/busking.service';
+import { BuskingRepository } from 'src/busking/busking.repository';
+import { MemberRepository } from 'src/member/member.repository';
 
 @Module({
   imports: [
@@ -31,11 +36,16 @@ import { ConfigService } from '@nestjs/config';
     UserFollowingController,
   ],
   providers: [
-    ArtistService,
     ArtistRepository,
     UserRepository,
+    BuskingRepository,
+    MemberRepository,
+    ArtistService,
     UserFollowingService,
     UploadImageService,
+    BuskingService,
+    MemberService,
+    BlockingService,
   ],
 })
 export class ArtistModule {}
