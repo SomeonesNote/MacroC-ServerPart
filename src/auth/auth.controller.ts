@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -26,12 +27,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user.decorator';
 import { UploadImageService } from 'src/upload/uploadImage.service';
 import { UploadPath } from 'src/upload/uploadPath';
+import { AppleAuthService } from './apple-auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly uploadImageService: UploadImageService,
+    private appleAuthService: AppleAuthService,
   ) {}
 
   @Post('/signup-with-image')
@@ -145,7 +148,15 @@ export class AuthController {
   }
 
   @Delete('/:id')
-  deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.authService.deleteUser(id);
+  async deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('refresh_token') refresh_token: string,
+  ): Promise<void | string> {
+    const revokeResult = await this.appleAuthService.getRevoke(refresh_token);
+    if (revokeResult) {
+      return await this.authService.deleteUser(id);
+    } else {
+      return 'revoke 실패';
+    }
   }
 }
