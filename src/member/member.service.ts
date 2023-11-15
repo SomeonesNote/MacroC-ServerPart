@@ -76,6 +76,20 @@ export class MemberService {
     }
   }
 
+  async deleteAllMemers(id: number): Promise<void> {
+    const artist = await this.artistRepository.findOne({
+      where: { id: id },
+      relations: ['members'],
+    });
+    const result = await this.memberRepository.delete({
+      artist: { id: artist.id },
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Memeber with ID "${id}" not found`);
+    }
+  }
+
   async updateMember(
     id: number,
     artistId: number,

@@ -87,6 +87,13 @@ export class MemberController {
     return this.memberService.deleteMemeber(id);
   }
 
+  @Delete('/:artistId')
+  deleteAllMember(
+    @Param('artistId', ParseIntPipe) artistId: number,
+  ): Promise<void> {
+    return this.memberService.deleteAllMemers(artistId);
+  }
+
   @Patch('/update/:id')
   @UsePipes(ValidationPipe)
   @UseInterceptors(FilesInterceptor('images'))
