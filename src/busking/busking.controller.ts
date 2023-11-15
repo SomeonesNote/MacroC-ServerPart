@@ -69,6 +69,13 @@ export class BuskingController {
     return this.buskingService.deleteBuskingById(id, artistId);
   }
 
+  @Delete('/:artistId')
+  deleteAllBusking(
+    @Param('artistId', ParseIntPipe) artistId: number,
+  ): Promise<void> {
+    return this.buskingService.deleteAllBuskingByArtist(artistId);
+  }
+
   @Patch('update/:id')
   async updateBusking(
     @Param('id') id: number,

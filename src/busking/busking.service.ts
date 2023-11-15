@@ -86,6 +86,19 @@ export class BuskingService {
     }
   }
 
+  async deleteAllBuskingByArtist(artistId: number): Promise<void> {
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
+    });
+    const result = await this.buskingRepository.delete({
+      artist: { id: artist.id },
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
+    }
+  }
+
   async updateBusking(
     id: number,
     artistId: number,
