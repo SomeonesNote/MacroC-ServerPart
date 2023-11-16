@@ -16,11 +16,9 @@ import { UploadImageService } from 'src/upload/uploadImage.service';
 import { AppleAuthService } from './apple-auth.service';
 import { AppleAuthController } from './apple-auth.controller';
 import { BuskingService } from 'src/busking/busking.service';
-import { MemberService } from 'src/member/member.service';
 import { BlockingService } from 'src/blocking/blocking.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { BuskingRepository } from 'src/busking/busking.repository';
-import { MemberRepository } from 'src/member/member.repository';
 import * as config from 'config';
 
 const jwtConfig = config.get('jwt');
@@ -51,14 +49,14 @@ const jwtConfig = config.get('jwt');
     ArtistRepository,
     UserRepository,
     BuskingRepository,
-    MemberRepository,
+    // MemberRepository,
     AuthService,
     ArtistService,
     UserFollowingService,
     UploadImageService,
     AppleAuthService,
     BuskingService,
-    MemberService,
+    // MemberService,
     BlockingService,
   ],
   exports: [JwtStrategy, PassportModule],

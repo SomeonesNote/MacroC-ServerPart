@@ -24,7 +24,8 @@ export class MemberService {
       throw new NotFoundException(`Artist "${artist}" not found`);
     }
 
-    return await this.memberRepository.createMember(memberDto, artist);
+    return await this.memberRepository.createMember(memberDto);
+    // return await this.memberRepository.createMember(memberDto, artist);
   }
 
   async getAllArtistMembers(
@@ -53,9 +54,7 @@ export class MemberService {
       relations: ['blockedArtists'],
     });
     const found = await this.memberRepository.findOneBy({ id });
-    const blockedArtisMembers = user.blockedArtists.flatMap(
-      (artist) => artist.members,
-    );
+    const blockedArtisMembers = user.blockedArtists.flatMap((artist) => artist);
     const blockedMembersIds = blockedArtisMembers.map((member) => member.id);
 
     if (blockedMembersIds.includes(found.id)) {
@@ -77,13 +76,12 @@ export class MemberService {
   }
 
   async deleteAllMemers(id: number): Promise<void> {
-    const artist = await this.artistRepository.findOne({
-      where: { id: id },
-      relations: ['members'],
-    });
-    const result = await this.memberRepository.delete({
-      artist: { id: artist.id },
-    });
+    // const artist = await this.artistRepository.findOne({
+    //   where: { id: id },
+    //   relations: ['members'],
+    // });
+    // const result = await this.memberRepository.delete({ artist });
+    const result = await this.memberRepository.delete({ id });
 
     if (result.affected === 0) {
       throw new NotFoundException(`Memeber with ID "${id}" not found`);
@@ -95,15 +93,15 @@ export class MemberService {
     artistId: number,
     memberDto: MemberDto,
   ): Promise<Member> {
-    const artist = await this.artistRepository.findOne({
-      where: { id: artistId },
-    });
+    // const artist = await this.artistRepository.findOne({
+    //   where: { id: artistId },
+    // });
     const member = await this.getArtistMemberById(id);
 
     member.memberName = memberDto.memberName;
     member.memberInfo = memberDto.memberInfo;
     member.memberImage = memberDto.memberImage;
-    member.artist = artist;
+    // member.artist = artist;
 
     await this.memberRepository.save(member);
     return member;

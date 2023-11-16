@@ -1,7 +1,6 @@
 import { IsOptional } from 'class-validator';
 import { User } from 'src/auth/user.entity';
 import { Busking } from 'src/busking/busking.entity';
-import { Member } from 'src/member/member.entity';
 import {
   BaseEntity,
   Column,
@@ -48,8 +47,8 @@ export class Artist extends BaseEntity {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @OneToMany(() => Member, (member) => member.artist, { eager: true })
-  members: Member[];
+  // @OneToMany(() => Member, (member) => member.artist, { eager: true })
+  // members: Member[];
 
   @OneToMany(() => Busking, (busking) => busking.artist, { eager: true })
   buskings: Busking[];

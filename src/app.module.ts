@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { ArtistModule } from './artist/artist.module';
-import { MemberModule } from './member/member.module';
 import { BuskingModule } from './busking/busking.module';
 import { BlockingModule } from './blocking/blocking.module';
 import { ReportingModule } from './reporting/reporting.module';
@@ -18,7 +17,7 @@ import { JwtModule } from '@nestjs/jwt';
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     ArtistModule,
-    MemberModule,
+    // MemberModule,
     BuskingModule,
     BlockingModule,
     ReportingModule,

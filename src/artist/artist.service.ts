@@ -7,7 +7,6 @@ import { Artist } from './artist.entity';
 import { UserRepository } from 'src/auth/user.repository';
 import { UserFollowingService } from 'src/follow/user-following.service';
 import { BuskingService } from 'src/busking/busking.service';
-import { MemberService } from 'src/member/member.service';
 import { BlockingService } from 'src/blocking/blocking.service';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class ArtistService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private buskingService: BuskingService,
-    private memberService: MemberService,
+    // private memberService: MemberService,
     private userFollowingService: UserFollowingService,
     private blockingService: BlockingService,
   ) {}

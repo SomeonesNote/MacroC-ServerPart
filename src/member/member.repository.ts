@@ -3,7 +3,6 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Artist } from 'src/artist/artist.entity';
 import { MemberDto } from 'src/member/dto/memberDto';
 import { Member } from 'src/member/member.entity';
 import { DataSource, Repository } from 'typeorm';
@@ -14,14 +13,15 @@ export class MemberRepository extends Repository<Member> {
     super(Member, dataSource.createEntityManager());
   }
 
-  async createMember(memberDto: MemberDto, artist: Artist): Promise<Member> {
+  async createMember(memberDto: MemberDto): Promise<Member> {
+    // async createMember(memberDto: MemberDto, artist: Artist): Promise<Member> {
     const { memberName, memberInfo, memberImage } = memberDto;
 
     const member = this.create({
       memberName,
       memberInfo,
       memberImage,
-      artist,
+      // artist,
     });
 
     try {
