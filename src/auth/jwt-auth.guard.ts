@@ -31,11 +31,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     } catch (error) {
       if (error instanceof TokenExpiredError) {
-        const payload = this.authService.refreshToken(
+        const newTokens = await this.authService.refreshToken(
           refreshToken,
           request.res,
         );
-        request.user = payload;
+        request.user = newTokens.accessToken;
+        request.cookies.refreshToken = newTokens.refreshToken;
         return true;
       } else {
         throw new UnauthorizedException();

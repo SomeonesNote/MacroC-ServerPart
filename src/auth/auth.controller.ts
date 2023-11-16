@@ -55,8 +55,8 @@ export class AuthController {
     console.log(req.cookies);
     console.log(refreshToken);
     if (!refreshToken) throw new Error('No refreshToken');
-    return this.authService.testingRefreshToken(refreshToken, req.res);
-    // return this.authService.refreshToken(refreshToken, req.res);
+    // return this.authService.testingRefreshToken(refreshToken, req.res);
+    return this.authService.refreshToken(refreshToken, req.res);
   }
 
   @Post('/signup-with-image')

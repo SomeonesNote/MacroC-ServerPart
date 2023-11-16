@@ -156,7 +156,7 @@ export class AuthService {
   async refreshToken(
     refreshToken: string,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       const { uid } = this.jwtService.verify(refreshToken);
       const user = await this.userRepository.findOneBy({ uid });
@@ -164,8 +164,11 @@ export class AuthService {
       if (user) {
         const payload = { uid };
         const newAccesstoken = await this.jwtService.sign(payload);
+        const newRefreshToken = await this.jwtService.sign(payload, {
+          expiresIn: '1d',
+        });
 
-        res.cookie('refreshToken', refreshToken, {
+        res.cookie('refreshToken', newRefreshToken, {
           httpOnly: true,
           secure: true,
           sameSite: 'lax',
@@ -173,6 +176,7 @@ export class AuthService {
 
         return {
           accessToken: newAccesstoken,
+          refreshToken: newRefreshToken,
         };
       } else {
         throw new UnauthorizedException('로그인 정보를 다시 확인 바랍니다.');
