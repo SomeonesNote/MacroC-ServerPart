@@ -5,7 +5,5 @@ node_modules
 dist
 npm-debug.log*
 *.p8
-# firebase key
-macroc-84754-firebase-adminsdk-n1n3t-18ec1eb2e7.json
 
 fly.toml
