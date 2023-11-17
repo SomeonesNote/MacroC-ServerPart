@@ -90,10 +90,16 @@ export class BuskingService {
     const artist = await this.artistRepository.findOne({
       where: { id: artistId },
     });
+    const buskings = await this.buskingRepository.findOne({
+      where: { id: artistId },
+    });
     const result = await this.buskingRepository.delete({
       artist: { id: artist.id },
     });
 
+    if (!buskings) {
+      return;
+    }
     if (result.affected === 0) {
       throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
     }
