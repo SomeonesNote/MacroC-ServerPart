@@ -5,7 +5,7 @@ import { BuskingDto } from './dto/buskingDto';
 import { Busking } from './busking.entity';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
-import { In, LessThan, MoreThan } from 'typeorm';
+import { In, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 
 @Injectable()
 export class BuskingService {
@@ -39,35 +39,20 @@ export class BuskingService {
       where: { id: userId },
       relations: ['blockedArtists'],
     });
-    const oldBuskings = await this.buskingRepository.find({
-      where: { BuskingEndTime: LessThan(currentTime) },
-    });
-    const buskings = await this.buskingRepository.find({
+
+    const blockedBuskingsIds = user.blockedArtists
+      .flatMap((artist) => artist.buskings)
+      .map((busking) => busking.id);
+
+    const nowPlayingBuskings = await this.buskingRepository.find({
       where: {
+        BuskingStartTime: LessThanOrEqual(currentTime),
         BuskingEndTime: MoreThan(currentTime),
+        id: Not(In(blockedBuskingsIds)),
       },
     });
-    const nowPlayingBuskings = buskings.filter(
-      (busking) => busking.BuskingStartTime <= currentTime,
-    );
-    const oldBuskingsIds = oldBuskings.map((busking) => busking.id);
-    const buskingdIds = nowPlayingBuskings.map((busking) => busking.id);
-    const blockedArtisBuskings = user.blockedArtists.flatMap(
-      (artist) => artist.buskings,
-    );
-    const blockedBuskingsIds = blockedArtisBuskings.map(
-      (busking) => busking.id,
-    );
-    const returnBuskingsIds = buskingdIds.filter(
-      (id) => !blockedBuskingsIds.includes(id),
-    );
 
-    await this.buskingRepository.delete({
-      id: In(oldBuskingsIds),
-    });
-    return nowPlayingBuskings.filter((busking) =>
-      returnBuskingsIds.includes(busking.id),
-    );
+    return nowPlayingBuskings;
   }
 
   async getAllBuskingByArtist(
