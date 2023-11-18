@@ -5,6 +5,7 @@ import { BuskingDto } from './dto/buskingDto';
 import { Busking } from './busking.entity';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
+import { In, LessThan, MoreThan } from 'typeorm';
 
 @Injectable()
 export class BuskingService {
@@ -28,6 +29,58 @@ export class BuskingService {
     buskingDto.stageName = artist.stageName;
     buskingDto.artistImage = artist.artistImage;
     return await this.buskingRepository.createBusking(buskingDto, artist);
+  }
+
+  async getAllBuskings(userId: number): Promise<Busking[]> {
+    const currentTime = new Date();
+    currentTime.setHours(currentTime.getHours() + 9);
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['blockedArtists'],
+    });
+    const oldBuskings = await this.buskingRepository.find({
+      where: { BuskingEndTime: LessThan(currentTime) },
+    });
+    const buskings = await this.buskingRepository.find({
+      where: {
+        BuskingEndTime: MoreThan(currentTime),
+      },
+    });
+    const nowPlayingBuskings = buskings.filter(
+      (busking) => busking.BuskingStartTime <= currentTime,
+    );
+    const oldBuskingsIds = oldBuskings.map((busking) => busking.id);
+    const buskingdIds = nowPlayingBuskings.map((busking) => busking.id);
+    const blockedArtisBuskings = user.blockedArtists.flatMap(
+      (artist) => artist.buskings,
+    );
+    const blockedBuskingsIds = blockedArtisBuskings.map(
+      (busking) => busking.id,
+    );
+    const returnBuskingsIds = buskingdIds.filter(
+      (id) => !blockedBuskingsIds.includes(id),
+    );
+
+    await this.buskingRepository.delete({
+      id: In(oldBuskingsIds),
+    });
+    return nowPlayingBuskings.filter((busking) =>
+      returnBuskingsIds.includes(busking.id),
+    );
+  }
+
+  async getNowPlayingBuskings(userId: number): Promise<Busking[]> {
+    const nowPlayingAllBuskings = await this.getAllBuskings(userId);
+    const nowTime = Date.now();
+    const nowPlayingBuskings = nowPlayingAllBuskings.filter(
+      (busking) =>
+        busking.BuskingStartTime.getTime() < nowTime &&
+        busking.BuskingEndTime.getTime() > nowTime,
+    );
+
+    console.log(nowPlayingBuskings);
+    return nowPlayingBuskings;
   }
 
   async getAllBuskingByArtist(

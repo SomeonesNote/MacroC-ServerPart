@@ -28,7 +28,7 @@ export class BuskingController {
 
   @Post('/register/:artistId')
   @UsePipes(ValidationPipe)
-  createBusking(
+  async createBusking(
     @Body() buskingDto: BuskingDto,
     @Param('artistId') artistId: number,
   ): Promise<Busking> {
@@ -39,18 +39,28 @@ export class BuskingController {
     );
     const artist = new Artist();
     artist.id = artistId;
-    return this.buskingService.createBusking(buskingDto, artistId);
+    return await this.buskingService.createBusking(buskingDto, artistId);
+  }
+
+  @Get('/getNowPlayingBuskings')
+  async getNowPlayingBusking(@GetUser() user: User): Promise<Busking[]> {
+    return await this.buskingService.getNowPlayingBuskings(user.id);
+  }
+
+  @Get('/getAllBuskings')
+  async getAllBuskings(@GetUser() user: User): Promise<Busking[]> {
+    return await this.buskingService.getAllBuskings(user.id);
   }
 
   @Get('/getAll/:artistId')
-  getAllBuskingByArtist(
+  async getAllBuskingByArtist(
     @Param('artistId') artistId: number,
     @GetUser() user: User,
   ): Promise<Busking[]> {
     this.logger.verbose(
       `Busking Performance is being fetched by Artist : ${artistId}, User : ${user.id}`,
     );
-    return this.buskingService.getAllBuskingByArtist(artistId, user.id);
+    return await this.buskingService.getAllBuskingByArtist(artistId, user.id);
   }
 
   @Get('/:id')
