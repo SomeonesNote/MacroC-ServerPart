@@ -31,7 +31,7 @@ export class BuskingService {
     return await this.buskingRepository.createBusking(buskingDto, artist);
   }
 
-  async getAllBuskings(userId: number): Promise<Busking[]> {
+  async getNowPlayingBuskings(userId: number): Promise<Busking[]> {
     const currentTime = new Date();
     currentTime.setHours(currentTime.getHours() + 9);
 
@@ -68,19 +68,6 @@ export class BuskingService {
     return nowPlayingBuskings.filter((busking) =>
       returnBuskingsIds.includes(busking.id),
     );
-  }
-
-  async getNowPlayingBuskings(userId: number): Promise<Busking[]> {
-    const nowPlayingAllBuskings = await this.getAllBuskings(userId);
-    const nowTime = Date.now();
-    const nowPlayingBuskings = nowPlayingAllBuskings.filter(
-      (busking) =>
-        busking.BuskingStartTime.getTime() < nowTime &&
-        busking.BuskingEndTime.getTime() > nowTime,
-    );
-
-    console.log(nowPlayingBuskings);
-    return nowPlayingBuskings;
   }
 
   async getAllBuskingByArtist(

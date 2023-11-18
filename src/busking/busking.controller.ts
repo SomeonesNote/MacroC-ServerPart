@@ -43,13 +43,8 @@ export class BuskingController {
   }
 
   @Get('/getNowPlayingBuskings')
-  async getNowPlayingBusking(@GetUser() user: User): Promise<Busking[]> {
+  async getNowPlayingBuskings(@GetUser() user: User): Promise<Busking[]> {
     return await this.buskingService.getNowPlayingBuskings(user.id);
-  }
-
-  @Get('/getAllBuskings')
-  async getAllBuskings(@GetUser() user: User): Promise<Busking[]> {
-    return await this.buskingService.getAllBuskings(user.id);
   }
 
   @Get('/getAll/:artistId')
