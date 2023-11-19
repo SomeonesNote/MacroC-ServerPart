@@ -54,7 +54,6 @@ export class Artist extends BaseEntity {
   buskings: Busking[];
 
   @ManyToMany(() => User, (user) => user.following)
-  // @JoinTable 'artist_followers_user' 삭제
   followers: User[];
 
   @ManyToMany(() => User, (user) => user.blockedArtists)

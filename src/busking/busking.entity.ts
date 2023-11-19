@@ -24,7 +24,6 @@ export class Busking extends BaseEntity {
   BuskingInfo: string;
 
   @Column()
-  // @Column({ type: 'timestamp with time zone' })
   BuskingStartTime: Date;
 
   @Column()
