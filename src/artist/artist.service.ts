@@ -17,9 +17,8 @@ export class ArtistService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private buskingService: BuskingService,
-    // private memberService: MemberService,
     private userFollowingService: UserFollowingService,
-    private blockingService: BlockingService,
+    private blockingService: BlockingService, // private memberService: MemberService,
   ) {}
 
   async createArtist(
@@ -52,6 +51,32 @@ export class ArtistService {
     const blockedArtistIds = user.blockedArtists.map((artist) => artist.id);
 
     if (blockedArtistIds.includes(Number(artistId))) {
+      console.log(`${user.id}는 ${found.stageName}를 차단했습니다.`);
+      throw new NotFoundException(
+        `요청하신 ${found.stageName}를 찾을 수 없습니다.`,
+      );
+    } else {
+      if (!found) {
+        throw new NotFoundException(
+          `요청하신 ${found.stageName}를 찾을 수가 없습니다.`,
+        );
+      }
+      return found;
+    }
+  }
+
+  async getArtistByName(stageName: string, userId?: number): Promise<Artist> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['blockedArtists'],
+    });
+
+    const found = await this.artistRepository.findOneBy({
+      stageName,
+    });
+    const blockedArtistIds = user.blockedArtists.map((artist) => artist.id);
+
+    if (blockedArtistIds.includes(Number(found.id))) {
       console.log(`${user.id}는 ${found.stageName}를 차단했습니다.`);
       throw new NotFoundException(
         `요청하신 ${found.stageName}를 찾을 수 없습니다.`,

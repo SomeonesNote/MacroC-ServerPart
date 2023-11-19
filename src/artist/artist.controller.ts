@@ -44,6 +44,14 @@ export class ArtistController {
     return this.artistService.getArtistById(id, user.id);
   }
 
+  @Get('/getArtistByName')
+  getArtistByName(
+    @GetUser() user: User,
+    @Param('name') stageName: string,
+  ): Promise<Artist> {
+    return this.artistService.getArtistByName(stageName, user.id);
+  }
+
   @Delete('/:id')
   deleteArtsist(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.artistService.deleteArtist(id);
