@@ -94,21 +94,31 @@ export class UserFollowingService {
   }
 
   async getFollowingOfUser(userId: number): Promise<Artist[]> {
+    const currentTime = new Date();
+    currentTime.setHours(currentTime.getHours() + 9);
+
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['following', 'blockedArtists'],
     });
     const blockedArtistIds = user.blockedArtists.map((artist) => artist.id);
-    const followArtistIds = user.following.map((artist) => artist.id);
-    const returnArtistIds = followArtistIds.filter(
-      (artistId) => !blockedArtistIds.includes(artistId),
+    const followArtistIds = user.following
+      .map((artist) => artist.id)
+      .filter((artistId) => !blockedArtistIds.includes(artistId));
+
+    const returnArtist = user.following.filter((artist) =>
+      followArtistIds.includes(artist.id),
     );
 
     if (!user) {
       throw new NotFoundException(`${user.username}를 찾을 수 없습니다.`);
     }
-    return user.following.filter((artist) =>
-      returnArtistIds.includes(artist.id),
-    );
+
+    returnArtist.forEach((artist) => {
+      artist.buskings = artist.buskings.filter(
+        (busking) => busking.BuskingEndTime > currentTime,
+      );
+    });
+    return returnArtist;
   }
 }
