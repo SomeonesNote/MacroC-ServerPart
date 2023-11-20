@@ -58,6 +58,14 @@ export class BuskingController {
     return await this.buskingService.getAllBuskingByArtist(artistId, user.id);
   }
 
+  @Get('/getArtist/:id')
+  async getArtistByBuskingId(
+    @Param('id') id: number,
+    @GetUser() user: User,
+  ): Promise<Artist> {
+    return this.buskingService.getArtistByBuskingId(id, user.id);
+  }
+
   @Get('/:id')
   getBuskingById(
     @Param('id') id: number,

@@ -6,6 +6,7 @@ import { Busking } from './busking.entity';
 import { ArtistRepository } from 'src/artist/artist.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { In, LessThanOrEqual, MoreThan, Not } from 'typeorm';
+import { Artist } from 'src/artist/artist.entity';
 
 @Injectable()
 export class BuskingService {
@@ -72,6 +73,32 @@ export class BuskingService {
       return buskings;
     } else {
       throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
+    }
+  }
+
+  async getArtistByBuskingId(
+    buskingId: number,
+    userId?: number,
+  ): Promise<Artist> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['blockedArtists'],
+    });
+    const busking = await this.buskingRepository.findOne({
+      where: { id: buskingId },
+      relations: ['artist'],
+    });
+    const blockedBuskingsIds = user.blockedArtists
+      .flatMap((artist) => artist.buskings)
+      .map((busking) => busking.id);
+
+    if (blockedBuskingsIds.includes(buskingId)) {
+      throw new NotFoundException(`요청하신 버스킹 정보를 찾을 수 없습니다.`);
+    } else {
+      if (!busking) {
+        throw new NotFoundException(`요청하신 버스킹을 찾을 수 없습니다.`);
+      }
+      return busking.artist;
     }
   }
 
