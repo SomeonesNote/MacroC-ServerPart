@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserRepository } from './user.repository';
 import axios from 'axios';
 import * as jwkToPem from 'jwk-to-pem';
 import * as jwt from 'jsonwebtoken';
@@ -9,8 +10,9 @@ import * as qs from 'querystring';
 @Injectable()
 export class AppleAuthService {
   constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
     private authService: AuthService,
-    private jwtService: JwtService,
   ) {}
 
   makeJwt(): string {
@@ -119,10 +121,10 @@ export class AppleAuthService {
     }
 
     const { events } = payload;
-
     if (events.type === 'consent-revoked' || events.type === 'account-delete') {
-      const userId = events.sub.split('.')[0];
-      await this.authService.deleteUser(userId);
+      const uid = events.sub;
+      const user = await this.userRepository.findOneBy({ uid });
+      await this.authService.deleteUser(user.id);
     }
   }
 }
