@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
+import * as jwkToPem from 'jwk-to-pem';
 import * as jwt from 'jsonwebtoken';
 import * as qs from 'querystring';
 
 @Injectable()
 export class AppleAuthService {
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+  ) {}
 
   makeJwt(): string {
     const privateKey = process.env.AUTH_KEY;
@@ -80,6 +86,43 @@ export class AppleAuthService {
       return true;
     } catch (error) {
       throw error;
+    }
+  }
+
+  async fetchApplePublicKey(keyId: string): Promise<string> {
+    const res = await axios.get('https://appleid.apple.com/auth/keys');
+    const keys = res.data.keys;
+    const key = keys.find((key) => key.kid === keyId);
+    if (!key) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    const applePublicKey = jwkToPem(key);
+    return applePublicKey;
+  }
+
+  async handleAppleCallBack(token: string): Promise<void> {
+    let payload: any;
+    const decodedToken = jwt.decode(token, { complete: true });
+    const applePublicKey = await this.fetchApplePublicKey(
+      decodedToken.header.kid,
+    );
+
+    try {
+      payload = jwt.verify(token, applePublicKey, {
+        algorithms: ['RS256'],
+      });
+      payload.events = JSON.parse(payload.events);
+    } catch (error) {
+      console.error(error);
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    const { events } = payload;
+
+    if (events.type === 'consent-revoked' || events.type === 'account-delete') {
+      const userId = events.sub.split('.')[0];
+      await this.authService.deleteUser(userId);
     }
   }
 }

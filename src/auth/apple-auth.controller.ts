@@ -14,6 +14,11 @@ export class AppleAuthController {
     return res.json({ refreshToken });
   }
 
+  @Post('/callback')
+  async handleAppleCallBack(@Body('payload') payload: string): Promise<void> {
+    await this.appleAuthService.handleAppleCallBack(payload);
+  }
+
   @Get('/revoke')
   async getRevoke(
     @Query('refresh_token') refresh_token: string,
