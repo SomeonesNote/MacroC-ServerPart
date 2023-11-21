@@ -49,7 +49,7 @@ export class AuthService {
         accessToken,
       };
 
-      console.log(response);
+      // console.log(response);
       return response;
     } else {
       throw new UnauthorizedException('Please check your login credentials');
