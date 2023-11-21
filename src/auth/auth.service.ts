@@ -116,6 +116,10 @@ export class AuthService {
       relations: ['user'],
     });
 
+    if (!user) {
+      throw new NotFoundException(`유저를 발견하지 못했습니다.`);
+    }
+
     if (user.artist !== null) {
       user.artist = null;
       artist.user = null;
@@ -125,10 +129,6 @@ export class AuthService {
       await this.userRepository.delete(user.id);
     } else {
       await this.userRepository.delete(user.id);
-    }
-
-    if (!user) {
-      throw new NotFoundException(`유저를 발견하지 못했습니다.`);
     }
   }
 }
