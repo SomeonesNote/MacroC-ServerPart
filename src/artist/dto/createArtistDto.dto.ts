@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { AuthCredentialsDto } from 'src/auth/dto/auth-credential.dto';
 import { BuskingDto } from 'src/busking/dto/buskingDto';
 
@@ -12,7 +12,7 @@ export class CreateArtistDto {
   genres: string;
 
   @IsString()
-  @MinLength(4)
+  // @MinLength(4)
   artistInfo: string;
 
   @IsString()
