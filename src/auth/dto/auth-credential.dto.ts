@@ -8,7 +8,7 @@ export class AuthCredentialsDto {
   uid: string;
 
   @IsString()
-  // @MinLength(4)
+  @MinLength(1)
   @MaxLength(20)
   username: string;
 
@@ -29,7 +29,7 @@ export class UsernameCredentialsDto {
 
 export class UpdatableUserInfos {
   @IsString()
-  @MinLength(4)
+  @MinLength(1)
   @MaxLength(20)
   username: string;
 
